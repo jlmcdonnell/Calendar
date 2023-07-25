@@ -8,13 +8,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.ui.calendar.view.CalendarView
+import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
+    val state by viewModel.collectAsState()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -24,11 +28,15 @@ fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
         Column(
             modifier = Modifier.padding(it),
         ) {
-            CalendarView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-            ) {
+            state.data?.let { monthData ->
+                CalendarView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    monthData = monthData,
+                ) { date ->
+                    // TODO: Render date cell
+                }
             }
         }
     }

@@ -42,15 +42,15 @@ class CalendarViewModelTest : BehaviorSpec({
                 }
 
                 Then("The first day should be Monday") {
-                    awaitItem().data!!.days.first().dayOfWeek shouldBe DayOfWeek.MONDAY
+                    awaitItem().data!!.days.first().date.dayOfWeek shouldBe DayOfWeek.MONDAY
                 }
 
                 Then("The last day should be sunday") {
-                    awaitItem().data!!.days.last().dayOfWeek shouldBe DayOfWeek.SUNDAY
+                    awaitItem().data!!.days.last().date.dayOfWeek shouldBe DayOfWeek.SUNDAY
                 }
 
                 Then("All dates in month should be increasing within range") {
-                    val days = awaitItem().data!!.days
+                    val days = awaitItem().data!!.days.map { it.date }
 
                     val start = testDate
                         .with(firstDayOfMonth())

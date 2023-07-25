@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -13,6 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,7 +34,15 @@ fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
             TopAppBar(
                 title = {
                     state.date?.run {
-                        Text(text = month.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                        Row {
+                            val monthText = month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                            Text(
+                                modifier = Modifier.alpha(.65f),
+                                text = "$year / ",
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            Text(text = monthText)
+                        }
                     } ?: run {
                         Text(text = stringResource(id = R.string.app_name))
                     }
@@ -49,7 +59,7 @@ fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
                         .fillMaxWidth()
                         .padding(4.dp),
                     monthData = monthData,
-                ) { date ->
+                ) { _ ->
                     // TODO: Render date cell
                 }
                 Row(

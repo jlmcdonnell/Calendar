@@ -1,34 +1,33 @@
 package dev.mcd.calendar.ui.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import dev.mcd.calendar.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp,
-    ),
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-     */
-)
+val Typography: Typography
+    @Composable
+    get() {
+        val font = FontFamily(Font(R.font.inter))
+        with(MaterialTheme.typography) {
+            return Typography(
+                displayLarge = displayLarge.copy(fontFamily = font),
+                displayMedium = displayMedium.copy(fontFamily = font),
+                displaySmall = displaySmall.copy(fontFamily = font),
+                headlineLarge = headlineLarge.copy(fontFamily = font),
+                headlineMedium = headlineMedium.copy(fontFamily = font),
+                headlineSmall = headlineSmall.copy(fontFamily = font),
+                titleLarge = titleLarge.copy(fontFamily = font),
+                titleMedium = titleMedium.copy(fontFamily = font),
+                titleSmall = titleSmall.copy(fontFamily = font),
+                bodyLarge = bodyLarge.copy(fontFamily = font),
+                bodyMedium = bodyMedium.copy(fontFamily = font),
+                bodySmall = bodySmall.copy(fontFamily = font),
+                labelLarge = labelLarge.copy(fontFamily = font),
+                labelMedium = labelMedium.copy(fontFamily = font),
+                labelSmall = labelSmall.copy(fontFamily = font),
+            )
+        }
+    }

@@ -25,7 +25,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
+fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel()) {
     val state by viewModel.collectAsState()
 
     Scaffold(

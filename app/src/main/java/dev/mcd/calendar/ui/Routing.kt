@@ -4,16 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.mcd.calendar.ui.calendar.HomeScreen
+import dev.mcd.calendar.ui.calendar.CalendarScreen
 
 @Composable
 fun Routing(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "/home",
+        startDestination = "/calendar",
     ) {
-        composable("/home") {
-            HomeScreen()
+        composable("/calendar") {
+            CalendarScreen()
         }
     }
 }

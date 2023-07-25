@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.home
+package dev.mcd.calendar.ui.calendar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +10,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.mcd.calendar.ui.common.calendar.CalendarView
+import androidx.hilt.navigation.compose.hiltViewModel
+import dev.mcd.calendar.ui.calendar.view.CalendarView
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: CalendarViewModel = hiltViewModel()) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

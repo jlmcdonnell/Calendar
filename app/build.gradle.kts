@@ -37,6 +37,7 @@ android {
         freeCompilerArgs += "-Xopt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi"
         freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
+        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
     }
     buildFeatures {
         compose = true
@@ -51,6 +52,10 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
@@ -59,7 +64,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
 
-    // Compose
+    // Compose BOM
     implementation(platform("androidx.compose:compose-bom:2023.04.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.04.00"))
     implementation("androidx.compose.ui:ui")
@@ -76,14 +81,19 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.46")
 
     // Orbit
-    implementation("org.orbit-mvi:orbit-core:4.6.1")
-    implementation("org.orbit-mvi:orbit-viewmodel:4.6.1")
-    implementation("org.orbit-mvi:orbit-compose:4.6.1")
+    implementation("org.orbit-mvi:orbit-core:6.0.0")
+    implementation("org.orbit-mvi:orbit-viewmodel:6.0.0")
+    implementation("org.orbit-mvi:orbit-compose:6.0.0")
 
     // Other
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    // Tests
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.6.2")
+    testImplementation("io.kotest:kotest-runner-junit5:5.6.2")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation("io.mockk:mockk:1.13.5")
 }

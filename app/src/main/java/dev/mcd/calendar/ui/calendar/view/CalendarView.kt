@@ -17,12 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.mcd.calendar.calendar.domain.CalendarDate
 import dev.mcd.calendar.calendar.domain.MonthData
 import dev.mcd.calendar.calendar.domain.isInMonth
+import dev.mcd.calendar.ui.theme.LocalAppColors
 
 private val topEdgeIndices = listOf(0, 1, 2, 3, 4, 5, 6)
 private val bottomEdgeIndices = listOf(35, 36, 37, 38, 39, 40, 41)
@@ -36,16 +36,14 @@ fun CalendarView(
     renderCell: @Composable (CalendarDate) -> Unit = {},
 ) {
     var calendarLayout by remember { mutableStateOf<CalendarLayout?>(null) }
+    val appColors = LocalAppColors.current
     Box(
         modifier = modifier
             .calendarLayout { calendarLayout = it }
             .clip(RoundedCornerShape(3.dp))
-            .background(Color(0xFFDFDFDF)),
+            .background(appColors.calendarBackground),
     ) {
-        FlowRow(
-            modifier = Modifier,
-
-        ) {
+        FlowRow {
             calendarLayout?.run {
                 monthData.days.forEachIndexed { i, date ->
                     CalendarCell(
@@ -72,28 +70,26 @@ fun CalendarCell(
     date: CalendarDate,
     renderCell: @Composable () -> Unit = {},
 ) {
+    val appColors = LocalAppColors.current
+
     Box(
-        modifier = Modifier
-            .size(cellSize)
-            .padding(
-                top = if (index in topEdgeIndices) 2.dp else 1.dp,
-                bottom = if (index in bottomEdgeIndices) 2.dp else 1.dp,
-                start = if (index in startEdgeIndices) 2.dp else 1.dp,
-                end = if (index in endEdgeIndices) 2.dp else 1.dp,
-            )
-            .clip(RoundedCornerShape(2.dp))
-            .let {
-                if (date.isInMonth) {
-                    it.background(Color.White)
-                } else {
-                    it.background(Color(0xFFF1F1F1))
-                }
-            },
+        modifier = Modifier.size(cellSize).padding(
+            top = if (index in topEdgeIndices) 2.dp else 1.dp,
+            bottom = if (index in bottomEdgeIndices) 2.dp else 1.dp,
+            start = if (index in startEdgeIndices) 2.dp else 1.dp,
+            end = if (index in endEdgeIndices) 2.dp else 1.dp,
+        ).clip(RoundedCornerShape(2.dp)).let {
+            if (date.isInMonth) {
+                it.background(appColors.inMonthBackground)
+            } else {
+                it.background(appColors.outOfMonthBackground)
+            }
+        },
     ) {
         Text(
             modifier = Modifier.padding(start = 3.dp),
             text = "${date.date.dayOfMonth}",
-            color = Color(0xFF4D4D4D),
+            color = appColors.calendarContentColor,
             fontSize = 11.sp,
         )
         renderCell()

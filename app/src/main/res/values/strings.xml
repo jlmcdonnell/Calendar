@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Calendar</string>
+
+    <!-- Calendar Screen -->
+    <string name="calendar_next_month">Next Month</string>
+    <string name="calendar_previous_month">Previous Month</string>
 </resources>

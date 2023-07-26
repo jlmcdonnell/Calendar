@@ -1,4 +1,4 @@
-package dev.mcd.calendar.feature.calendar.domain
+package dev.mcd.calendar.feature.calendar.domain.entity
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

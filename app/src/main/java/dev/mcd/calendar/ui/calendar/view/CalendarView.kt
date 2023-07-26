@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.mcd.calendar.feature.calendar.domain.CalendarDate
-import dev.mcd.calendar.feature.calendar.domain.MonthData
-import dev.mcd.calendar.feature.calendar.domain.isInMonth
+import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
+import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.theme.LocalAppColors
 
 private val topEdgeIndices = listOf(0, 1, 2, 3, 4, 5, 6)

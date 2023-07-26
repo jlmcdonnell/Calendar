@@ -3,7 +3,7 @@ package dev.mcd.calendar.ui.calendar
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mcd.calendar.feature.calendar.domain.GetMonthData
-import dev.mcd.calendar.feature.calendar.domain.MonthData
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent

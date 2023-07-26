@@ -1,7 +1,5 @@
-package dev.mcd.calendar.calendar.domain
+package dev.mcd.calendar.feature.calendar.domain
 
-import dev.mcd.calendar.feature.calendar.domain.precedingMonthDays
-import dev.mcd.calendar.feature.calendar.domain.succeedingMonthDays
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate

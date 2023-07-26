@@ -1,19 +1,14 @@
 package dev.mcd.calendar.ui.calendar
 
 import app.cash.turbine.test
+import dev.mcd.calendar.feature.calendar.domain.GetMonthData
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.collections.shouldBeStrictlyIncreasing
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters.firstDayOfMonth
-import java.time.temporal.TemporalAdjusters.firstDayOfNextMonth
-import java.time.temporal.TemporalAdjusters.nextOrSame
-import java.time.temporal.TemporalAdjusters.previousOrSame
 
 class CalendarViewModelTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
@@ -21,6 +16,7 @@ class CalendarViewModelTest : BehaviorSpec({
     val testDate = LocalDate.of(2023, 7, 25)
     val viewModel = CalendarViewModel(
         dateProvider = { testDate },
+        getMonthData = GetMonthData(),
     )
 
     Given("The ViewModel is initialized") {
@@ -37,34 +33,8 @@ class CalendarViewModelTest : BehaviorSpec({
                     awaitItem().date shouldBe testDate
                 }
 
-                Then("Month data should contain 42 days") {
-                    awaitItem().data!!.days.size shouldBe 42
-                }
-
-                Then("The first day should be Monday") {
-                    awaitItem().data!!.days.first().date.dayOfWeek shouldBe DayOfWeek.MONDAY
-                }
-
-                Then("The last day should be sunday") {
-                    awaitItem().data!!.days.last().date.dayOfWeek shouldBe DayOfWeek.SUNDAY
-                }
-
-                Then("All dates in month should be increasing within range") {
-                    val days = awaitItem().data!!.days.map { it.date }
-
-                    val start = testDate
-                        .with(firstDayOfMonth())
-                        .with(previousOrSame(DayOfWeek.MONDAY))
-
-                    val end = testDate
-                        .with(firstDayOfNextMonth())
-                        .with(nextOrSame(DayOfWeek.SUNDAY))
-
-                    days.all {
-                        it in start..end
-                    }.shouldBeTrue()
-
-                    days.shouldBeStrictlyIncreasing()
+                Then("MonthData is generated") {
+                    awaitItem().data!!.shouldNotBeNull()
                 }
 
                 When("Next month is pressed") {

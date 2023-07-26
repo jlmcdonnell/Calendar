@@ -37,27 +37,26 @@ fun CalendarView(
 ) {
     var calendarLayout by remember { mutableStateOf<CalendarLayout?>(null) }
     val appColors = LocalAppColors.current
-    Box(
+
+    FlowRow(
         modifier = modifier
             .calendarLayout { calendarLayout = it }
             .clip(RoundedCornerShape(3.dp))
             .background(appColors.calendarBackground),
     ) {
-        FlowRow {
-            calendarLayout?.run {
-                monthData.days.forEachIndexed { i, date ->
-                    CalendarCell(
-                        index = i,
-                        date = date,
-                        renderCell = {
-                            Column {
-                                Spacer(modifier = Modifier.height(10.dp))
-                            }
+        calendarLayout?.run {
+            monthData.days.forEachIndexed { i, date ->
+                CalendarCell(
+                    index = i,
+                    date = date,
+                    renderCell = {
+                        Column {
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
 
-                            renderCell(date)
-                        },
-                    )
-                }
+                        renderCell(date)
+                    },
+                )
             }
         }
     }
@@ -73,18 +72,20 @@ fun CalendarCell(
     val appColors = LocalAppColors.current
 
     Box(
-        modifier = Modifier.size(cellSize).padding(
-            top = if (index in topEdgeIndices) 2.dp else 1.dp,
-            bottom = if (index in bottomEdgeIndices) 2.dp else 1.dp,
-            start = if (index in startEdgeIndices) 2.dp else 1.dp,
-            end = if (index in endEdgeIndices) 2.dp else 1.dp,
-        ).clip(RoundedCornerShape(2.dp)).let {
-            if (date.isInMonth) {
-                it.background(appColors.inMonthBackground)
-            } else {
-                it.background(appColors.outOfMonthBackground)
-            }
-        },
+        modifier = Modifier
+            .size(cellSize)
+            .padding(
+                top = if (index in topEdgeIndices) 2.dp else 1.dp,
+                bottom = if (index in bottomEdgeIndices) 2.dp else 1.dp,
+                start = if (index in startEdgeIndices) 2.dp else 1.dp,
+                end = if (index in endEdgeIndices) 2.dp else 1.dp,
+            ).clip(RoundedCornerShape(2.dp)).let {
+                if (date.isInMonth) {
+                    it.background(appColors.inMonthBackground)
+                } else {
+                    it.background(appColors.outOfMonthBackground)
+                }
+            },
     ) {
         Text(
             modifier = Modifier.padding(start = 3.dp),

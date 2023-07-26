@@ -1,4 +1,4 @@
-package dev.mcd.calendar.feature.calendar.data
+package dev.mcd.calendar.feature.calendar.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,8 +9,8 @@ import java.time.ZonedDateTime
     tableName = "events",
 )
 data class EventEntity(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long? = null,
     val title: String,
     val description: String,
     val date: LocalDate,

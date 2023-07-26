@@ -1,10 +1,10 @@
 package dev.mcd.calendar.feature.calendar.data
 
 import androidx.room.Room
-import dev.mcd.calendar.feature.calendar.data.entity.EventEntity
+import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,33 +14,30 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 
 @RunWith(RobolectricTestRunner::class)
-class EventsTest {
+class EventsRepositoryImplTest {
+
+    private val mapper = EventEntityMapper()
 
     private lateinit var database: CalendarDatabase
     private lateinit var events: Events
+    private lateinit var repository: EventsRepositoryImpl
 
     @Before
     fun setUp() {
         database = createDatabase()
         events = database.events()
-    }
-
-    @After
-    fun tearDown() {
-        database.close()
+        repository = EventsRepositoryImpl(events, mapper)
     }
 
     @Test
     fun `Insert entity`() {
         runBlocking {
-            val entity = EventEntity(
-                id = 0,
+            repository.addEvent(
                 title = "Hello",
                 description = "Description",
                 date = LocalDate.now(),
                 time = ZonedDateTime.now(),
             )
-            events.addEvent(entity)
         }
     }
 
@@ -48,15 +45,15 @@ class EventsTest {
     fun `Query entity for date`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
-                id = 0,
+
+            repository.addEvent(
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            events.addEvent(entity)
-            events.findByDate(date) shouldBe listOf(entity)
+
+            repository.findByDate(date).first().title shouldBe "Hello"
         }
     }
 
@@ -64,15 +61,15 @@ class EventsTest {
     fun `Query entity for ID`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
-                id = 0,
+
+            val entity = repository.addEvent(
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val id = events.addEvent(entity)
-            events.findById(id) shouldBe entity
+
+            repository.findById(entity.id) shouldBe entity
         }
     }
 
@@ -80,17 +77,19 @@ class EventsTest {
     fun `Update entity`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
-                id = 0,
+
+            repository.addEvent(
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val update = entity.copy(title = "world")
-            events.addEvent(entity)
-            events.updateEvent(update)
-            events.findByDate(date) shouldBe listOf(update)
+
+            val event = repository.findByDate(date).first()
+            val update = event.copy(title = "world")
+
+            repository.updateEvent(update)
+            repository.findByDate(date).first().title shouldBe "world"
         }
     }
 
@@ -98,16 +97,16 @@ class EventsTest {
     fun `Delete entity by ID`() {
         runBlocking {
             val date = LocalDate.now()
-            val entity = EventEntity(
-                id = 0,
+
+            val entity = repository.addEvent(
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val id = events.addEvent(entity)
-            events.deleteEvent(id)
-            events.findByDate(date) shouldBe emptyList()
+
+            repository.deleteEvent(entity.id)
+            shouldThrow<NullPointerException> { repository.findById(entity.id) }
         }
     }
 

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -85,6 +86,12 @@ dependencies {
     implementation("org.orbit-mvi:orbit-core:6.0.0")
     implementation("org.orbit-mvi:orbit-viewmodel:6.0.0")
     implementation("org.orbit-mvi:orbit-compose:6.0.0")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    testImplementation("androidx.room:room-testing:2.5.2")
 
     // Other
     implementation("com.jakewharton.timber:timber:5.0.1")

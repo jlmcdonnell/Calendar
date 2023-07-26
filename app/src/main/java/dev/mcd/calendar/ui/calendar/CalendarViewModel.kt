@@ -2,10 +2,10 @@ package dev.mcd.calendar.ui.calendar
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.mcd.calendar.calendar.domain.CalendarDate
-import dev.mcd.calendar.calendar.domain.MonthData
-import dev.mcd.calendar.calendar.domain.precedingMonthDays
-import dev.mcd.calendar.calendar.domain.succeedingMonthDays
+import dev.mcd.calendar.feature.calendar.domain.CalendarDate
+import dev.mcd.calendar.feature.calendar.domain.MonthData
+import dev.mcd.calendar.feature.calendar.domain.precedingMonthDays
+import dev.mcd.calendar.feature.calendar.domain.succeedingMonthDays
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent

@@ -1,4 +1,4 @@
-package dev.mcd.calendar.common
+package dev.mcd.calendar.feature.common
 
 import dagger.Module
 import dagger.Provides

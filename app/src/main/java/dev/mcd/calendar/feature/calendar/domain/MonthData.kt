@@ -1,4 +1,4 @@
-package dev.mcd.calendar.calendar.domain
+package dev.mcd.calendar.feature.calendar.domain
 
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters.lastDayOfMonth

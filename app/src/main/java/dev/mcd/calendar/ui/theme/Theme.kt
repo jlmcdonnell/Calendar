@@ -9,13 +9,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
+private val darkColors = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
 )
 
-private val LightColorScheme = lightColorScheme(
+private val lightColors = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
@@ -27,18 +27,18 @@ sealed interface AppColors {
     val outOfMonthBackground: Color
     val inMonthBackground: Color
 
-    object Light : AppColors {
+    data object Light : AppColors {
         override val calendarContentColor = Color(0xFF4E4E4E)
         override val calendarBackground = Color(0xFFDFDFDF)
         override val outOfMonthBackground = Color(0xFFF1F1F1)
         override val inMonthBackground = Color.White
     }
 
-    object Dark : AppColors {
+    data object Dark : AppColors {
         override val calendarContentColor = Color(0xFFAFAFAF)
         override val calendarBackground = Color(0xFF111111)
-        override val outOfMonthBackground = Color(0xFF242424)
-        override val inMonthBackground = Color(0xFF1D1D1D)
+        override val outOfMonthBackground = Color(0xFF1D1D1D)
+        override val inMonthBackground = Color(0xFF242424)
     }
 }
 
@@ -50,8 +50,8 @@ fun CalendarTheme(
     content: @Composable () -> Unit,
 ) {
     val (colorScheme, appColors) = when {
-        darkTheme -> DarkColorScheme to AppColors.Dark
-        else -> LightColorScheme to AppColors.Light
+        darkTheme -> darkColors to AppColors.Dark
+        else -> lightColors to AppColors.Light
     }
 
     CompositionLocalProvider(LocalAppColors provides appColors) {

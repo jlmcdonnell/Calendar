@@ -1,7 +1,6 @@
 package dev.mcd.calendar.ui.calendar
 
 import dev.mcd.calendar.feature.calendar.domain.GetMonthData
-import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.test.viewmodel.testSideEffect
 import dev.mcd.calendar.test.viewmodel.testState
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
@@ -122,10 +121,3 @@ class CalendarViewModelTest : BehaviorSpec({
         }
     }
 })
-
-context(CalendarViewModel)
-private fun calendarDate(
-    date: LocalDate,
-): CalendarDate {
-    return container.stateFlow.value.data!!.days.first { it.date == date }
-}

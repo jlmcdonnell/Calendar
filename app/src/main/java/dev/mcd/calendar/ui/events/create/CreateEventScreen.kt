@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -67,7 +67,7 @@ fun CreateEventScreen(
                 },
             ) {
                 Icon(
-                    painter = rememberVectorPainter(image = Icons.Rounded.Add),
+                    painter = rememberVectorPainter(image = Icons.Rounded.Done),
                     contentDescription = stringResource(id = R.string.create_event_add_event),
                 )
             }

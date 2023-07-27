@@ -26,7 +26,7 @@ fun TopBar(
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.create_event_title))
+            Text(text = title)
         },
     )
 }

@@ -15,6 +15,10 @@
     <string name="create_event_description_date">Select Date</string>
     <string name="create_event_description_time">Select Time</string>
 
+    <!-- Events -->
+    <string name="event_add">Add Event</string>
+    <string name="event_delete">Delete Event</string>
+
     <!-- Time Picker -->
     <string name="time_picker_title">Select Time</string>
 </resources>

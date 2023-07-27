@@ -2,8 +2,8 @@ package dev.mcd.calendar.feature.calendar.domain
 
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.precedingMonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.succeedingMonthDays
+import dev.mcd.calendar.feature.calendar.domain.extension.precedingMonthDays
+import dev.mcd.calendar.feature.calendar.domain.extension.succeedingMonthDays
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters

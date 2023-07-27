@@ -1,4 +1,4 @@
-package dev.mcd.calendar.feature.calendar.domain.entity
+package dev.mcd.calendar.feature.calendar.domain.extension
 
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters

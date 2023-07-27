@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar.view
+package dev.mcd.calendar.ui.calendar.month.view
 
 import androidx.compose.ui.unit.Dp
 

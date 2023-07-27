@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar.view.extension
+package dev.mcd.calendar.ui.calendar.month.view.extension
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier

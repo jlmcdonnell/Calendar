@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar
+package dev.mcd.calendar.ui.calendar.month
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateCreateEvent
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateToDay
-import dev.mcd.calendar.ui.calendar.view.CalendarView
+import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateCreateEvent
+import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateToDay
+import dev.mcd.calendar.ui.calendar.month.view.CalendarView
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import java.time.LocalDate
@@ -29,8 +29,8 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun CalendarScreen(
-    viewModel: CalendarViewModel = hiltViewModel(),
+fun CalendarMonthScreen(
+    viewModel: CalendarMonthViewModel = hiltViewModel(),
     onNavigateCreateEvent: (LocalDate) -> Unit,
     onNavigateDay: (LocalDate) -> Unit,
 ) {

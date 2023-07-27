@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar.view
+package dev.mcd.calendar.ui.calendar.month.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.sp
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
-import dev.mcd.calendar.ui.calendar.view.extension.CalendarViewIndices
-import dev.mcd.calendar.ui.calendar.view.extension.calendarCellPadding
-import dev.mcd.calendar.ui.calendar.view.extension.calendarLayout
+import dev.mcd.calendar.ui.calendar.month.view.extension.CalendarViewIndices
+import dev.mcd.calendar.ui.calendar.month.view.extension.calendarCellPadding
+import dev.mcd.calendar.ui.calendar.month.view.extension.calendarLayout
 import dev.mcd.calendar.ui.theme.LocalAppColors
 
 @Composable

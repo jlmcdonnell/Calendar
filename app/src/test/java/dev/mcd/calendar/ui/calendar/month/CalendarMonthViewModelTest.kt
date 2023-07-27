@@ -1,11 +1,8 @@
-package dev.mcd.calendar.ui.calendar
+package dev.mcd.calendar.ui.calendar.month
 
 import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateCreateEvent
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateToDay
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -16,14 +13,14 @@ import org.junit.Test
 import org.orbitmvi.orbit.test.test
 import java.time.LocalDate
 
-class CalendarViewModelTest {
+class CalendarMonthViewModelTest {
 
     private val defaultTestDate = LocalDate.of(2023, 7, 25)
 
     @Test
     fun `When initialized, Then emit current date`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, State()) {
+        viewModel.test(this, CalendarMonthViewModel.State()) {
             runOnCreate()
             expectInitialState()
             awaitState().date shouldBe defaultTestDate
@@ -33,7 +30,7 @@ class CalendarViewModelTest {
     @Test
     fun `When initialized, Then generate month days`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, State()) {
+        viewModel.test(this, CalendarMonthViewModel.State()) {
             runOnCreate()
             expectInitialState()
             awaitState().monthDays.shouldNotBeNull()
@@ -43,7 +40,7 @@ class CalendarViewModelTest {
     @Test
     fun `When next month is clicked, Then the data should be updated`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, State()) {
+        viewModel.test(this, CalendarMonthViewModel.State()) {
             runOnCreate()
             expectInitialState()
             val currentState = awaitState()
@@ -62,7 +59,7 @@ class CalendarViewModelTest {
     @Test
     fun `When previous month is clicked, Then the data should be updated`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, State()) {
+        viewModel.test(this, CalendarMonthViewModel.State()) {
             runOnCreate()
             expectInitialState()
             val currentState = awaitState()
@@ -81,7 +78,7 @@ class CalendarViewModelTest {
     @Test
     fun `When the date is changed within the month, Then only update the date`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, State()) {
+        viewModel.test(this, CalendarMonthViewModel.State()) {
             runOnCreate()
             expectInitialState()
             val currentState = awaitState()
@@ -108,7 +105,7 @@ class CalendarViewModelTest {
             viewModel.onDateClicked(defaultTestDate)
 
             // Then
-            awaitSideEffect() shouldBe NavigateCreateEvent(defaultTestDate)
+            awaitSideEffect() shouldBe CalendarMonthViewModel.SideEffect.NavigateCreateEvent(defaultTestDate)
             cancelAndIgnoreRemainingItems()
         }
     }
@@ -130,7 +127,7 @@ class CalendarViewModelTest {
             viewModel.onDateClicked(defaultTestDate)
 
             // Then
-            awaitSideEffect() shouldBe NavigateToDay(defaultTestDate)
+            awaitSideEffect() shouldBe CalendarMonthViewModel.SideEffect.NavigateToDay(defaultTestDate)
             cancelAndIgnoreRemainingItems()
         }
     }
@@ -157,8 +154,8 @@ class CalendarViewModelTest {
         dateProvider: () -> LocalDate = { defaultTestDate },
         getMonthDays: GetMonthDays = GetMonthDays(),
         getEventsForMonth: GetEventsForMonth = givenNoEvents(),
-    ): CalendarViewModel {
-        return CalendarViewModel(
+    ): CalendarMonthViewModel {
+        return CalendarMonthViewModel(
             dateProvider = dateProvider,
             getMonthDays = getMonthDays,
             getEventsForMonth = getEventsForMonth,

@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar
+package dev.mcd.calendar.ui.calendar.month
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -6,8 +6,8 @@ import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
+import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect
+import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.State
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -18,7 +18,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarViewModel @Inject constructor(
+class CalendarMonthViewModel @Inject constructor(
     private val dateProvider: () -> LocalDate,
     private val getMonthDays: GetMonthDays,
     private val getEventsForMonth: GetEventsForMonth,

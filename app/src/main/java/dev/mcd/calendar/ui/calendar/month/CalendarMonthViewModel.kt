@@ -13,6 +13,7 @@ import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.syntax.simple.repeatOnSubscription
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
@@ -28,8 +29,10 @@ class CalendarMonthViewModel @Inject constructor(
         initialState = State(),
         onCreate = {
             intent {
-                val date = dateProvider()
-                selectDate(date)
+                repeatOnSubscription {
+                    val date = dateProvider()
+                    selectDate(date)
+                }
             }
         },
     )
@@ -66,22 +69,14 @@ class CalendarMonthViewModel @Inject constructor(
 
     context(SimpleSyntax<State, SideEffect>)
     private suspend fun selectDate(date: LocalDate) {
-        val newMonthDays = if (state.monthDays?.any { it.date == date } != true) {
-            getMonthDays(date)
-        } else {
-            null
-        }
-        val events = if (newMonthDays != null) {
-            getEventCountsForMonth(newMonthDays)
-        } else {
-            null
-        }
+        val newMonthDays = getMonthDays(date)
+        val events = getEventCountsForMonth(newMonthDays)
 
         reduce {
             state.copy(
                 date = date,
-                monthDays = newMonthDays ?: state.monthDays,
-                events = events ?: state.events,
+                monthDays = newMonthDays,
+                events = events,
             )
         }
     }

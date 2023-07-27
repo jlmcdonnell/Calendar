@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
 import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
+import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateCreateEvent
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateToDay
 import dev.mcd.calendar.ui.calendar.month.view.CalendarView
@@ -102,7 +103,9 @@ private fun Calendar(
         renderCell = { date ->
             events[date.date]?.let { count ->
                 EventCountText(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .alpha(if (date.isInMonth) 1f else 0.6f),
                     count = count.count,
                 )
             }

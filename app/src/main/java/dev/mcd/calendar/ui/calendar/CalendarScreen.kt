@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateCreateEvent
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateToDay
 import dev.mcd.calendar.ui.calendar.view.CalendarView
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -31,12 +32,14 @@ import java.util.Locale
 fun CalendarScreen(
     viewModel: CalendarViewModel = hiltViewModel(),
     onNavigateCreateEvent: (LocalDate) -> Unit,
+    onNavigateDay: (LocalDate) -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
     viewModel.collectSideEffect {
         when (it) {
             is NavigateCreateEvent -> onNavigateCreateEvent(it.date)
+            is NavigateToDay -> onNavigateDay(it.date)
         }
     }
 

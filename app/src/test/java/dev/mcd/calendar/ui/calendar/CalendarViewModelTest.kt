@@ -3,167 +3,179 @@ package dev.mcd.calendar.ui.calendar
 import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
-import dev.mcd.calendar.feature.calendar.domain.entity.Event
-import dev.mcd.calendar.test.viewmodel.testSideEffect
-import dev.mcd.calendar.test.viewmodel.testState
-import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
-import io.kotest.core.spec.IsolationMode
-import io.kotest.core.spec.style.BehaviorSpec
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateCreateEvent
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect.NavigateToDay
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import org.orbitmvi.orbit.test.test
 import java.time.LocalDate
-import java.time.ZonedDateTime
 
-class CalendarViewModelTest : BehaviorSpec({
-    isolationMode = IsolationMode.InstancePerLeaf
+class CalendarViewModelTest {
 
-    Given("The ViewModel is initialized") {
-        val testDate = LocalDate.of(2023, 7, 25)
-        val getEventsForMonth = mockk<GetEventsForMonth>()
-        val viewModel = CalendarViewModel(
-            dateProvider = { testDate },
-            getMonthDays = GetMonthDays(),
-            getEventsForMonth = getEventsForMonth,
-        )
+    private val defaultTestDate = LocalDate.of(2023, 7, 25)
 
-        with(viewModel) {
-            Then("Emit default state on initialization") {
-                testState(consumeInitialState = false) {
-                    awaitItem() shouldBe CalendarViewModel.State()
-                    cancelAndConsumeRemainingEvents()
-                }
-            }
+    @Test
+    fun `When initialized, Then emit current date`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this, State()) {
+            runOnCreate()
+            expectInitialState()
+            awaitState().date shouldBe defaultTestDate
+        }
+    }
 
-            Then("Emit the current date") {
-                getEventsForMonth.givenNoEvents()
+    @Test
+    fun `When initialized, Then generate month days`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this, State()) {
+            runOnCreate()
+            expectInitialState()
+            awaitState().monthDays.shouldNotBeNull()
+        }
+    }
 
-                testState {
-                    awaitItem().date shouldBe testDate
-                }
-            }
+    @Test
+    fun `When next month is clicked, Then the data should be updated`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this, State()) {
+            runOnCreate()
+            expectInitialState()
+            val currentState = awaitState()
 
-            Then("MonthData is generated") {
-                getEventsForMonth.givenNoEvents()
-                testState {
-                    awaitItem().monthDays!!.shouldNotBeNull()
-                }
-            }
+            // When
+            viewModel.onNextMonth()
 
-            When("Next month is pressed") {
-                getEventsForMonth.givenNoEvents()
-                testState {
-                    val currentState = awaitItem()
-                    viewModel.onNextMonth()
-
-                    Then("The next month should be set") {
-                        awaitItem().date shouldBe currentState.date?.plusMonths(1)
-                    }
-
-                    Then("The data should be updated") {
-                        val state = awaitItem()
-                        state.monthDays shouldNotBe currentState.monthDays
-                    }
-                }
-            }
-            When("Previous month is pressed") {
-                getEventsForMonth.givenNoEvents()
-                testState {
-                    val currentState = awaitItem()
-                    viewModel.onPreviousMonth()
-
-                    Then("The previous month should be set") {
-                        awaitItem().date shouldBe currentState.date?.minusMonths(1)
-                    }
-
-                    Then("The data should be updated") {
-                        val state = awaitItem()
-                        state.monthDays shouldNotBe currentState.monthDays
-                    }
-                }
-            }
-
-            When("The date is changed") {
-                getEventsForMonth.givenNoEvents()
-                testState {
-                    val currentState = awaitItem()
-
-                    And("That date is outside of the current month view") {
-                        val newDate = testDate.plusMonths(1)
-                        viewModel.onGoToDate(newDate)
-
-                        Then("That date should be set") {
-                            awaitItem().date shouldBe newDate
-                        }
-
-                        Then("The month data should be updated") {
-                            val state = awaitItem()
-                            state.monthDays shouldNotBe currentState.monthDays
-                        }
-                    }
-                    And("That date is within the current month view") {
-                        val newDate = testDate.plusDays(1)
-                        viewModel.onGoToDate(newDate)
-
-                        Then("That date should be set") {
-                            awaitItem().date shouldBe newDate
-                        }
-
-                        Then("The month data should not be updated") {
-                            val state = awaitItem()
-                            state.monthDays shouldBeSameInstanceAs currentState.monthDays
-                        }
-                    }
-                }
-            }
-
-            When("A day is clicked") {
-                getEventsForMonth.givenNoEvents()
-                testSideEffect {
-                    viewModel.onDateClicked(testDate)
-
-                    And("There are no events") {
-                        Then("Navigate to Create Event with given date") {
-                            awaitItem() shouldBe SideEffect.NavigateCreateEvent(testDate)
-                        }
-                    }
-                }
-            }
-
-            // Given the ViewModel is initialized
-            And("There events for the date are present") {
-                val events = listOf(
-                    Event(
-                        id = 0,
-                        title = "title",
-                        description = "description",
-                        date = testDate,
-                        time = ZonedDateTime.now(),
-                    ),
-                )
-
-                val expectedEventsState = mapOf(testDate to DateEvents(testDate, events))
-                getEventsForMonth.givenEvents(events = expectedEventsState)
-
-                Then("Emit the events") {
-                    testState {
-                        awaitItem().events shouldBe expectedEventsState
-                    }
-                }
+            // Then
+            awaitState().run {
+                date shouldBe defaultTestDate.plusMonths(1)
+                monthDays shouldNotBe currentState.monthDays
             }
         }
     }
-})
 
-private suspend fun GetEventsForMonth.givenNoEvents() {
-    coEvery { this@givenNoEvents.invoke(any()) } returns emptyMap()
-}
+    @Test
+    fun `When previous month is clicked, Then the data should be updated`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this, State()) {
+            runOnCreate()
+            expectInitialState()
+            val currentState = awaitState()
 
-private suspend fun GetEventsForMonth.givenEvents(
-    events: Map<LocalDate, DateEvents> = emptyMap(),
-) {
-    coEvery { this@givenEvents.invoke(any()) } returns events
+            // When
+            viewModel.onPreviousMonth()
+
+            // Then
+            awaitState().run {
+                date shouldBe defaultTestDate.minusMonths(1)
+                monthDays shouldNotBe currentState.monthDays
+            }
+        }
+    }
+
+    @Test
+    fun `When the date is changed within the month, Then only update the date`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this, State()) {
+            runOnCreate()
+            expectInitialState()
+            val currentState = awaitState()
+
+            // When
+            viewModel.onGoToDate(defaultTestDate.plusDays(1))
+
+            // Then
+            awaitState().run {
+                date shouldBe defaultTestDate.plusDays(1)
+                monthDays shouldBe currentState.monthDays
+            }
+        }
+    }
+
+    @Test
+    fun `When a date with no Events is clicked, Then Navigate to Create Event`() = runTest {
+        val viewModel = givenViewModel()
+        viewModel.test(this) {
+            expectInitialState()
+            runOnCreate()
+
+            // When
+            viewModel.onDateClicked(defaultTestDate)
+
+            // Then
+            awaitSideEffect() shouldBe NavigateCreateEvent(defaultTestDate)
+            cancelAndIgnoreRemainingItems()
+        }
+    }
+
+    @Test
+    fun `When a date with Events is clicked, Then Navigate to Day`() = runTest {
+        val events = mapOf(defaultTestDate to DateEvents(defaultTestDate, listOf(mockk())))
+
+        val viewModel = givenViewModel(
+            getEventsForMonth = givenEvents(events),
+        )
+
+        viewModel.test(this) {
+            expectInitialState()
+            runOnCreate()
+            awaitState()
+
+            // When
+            viewModel.onDateClicked(defaultTestDate)
+
+            // Then
+            awaitSideEffect() shouldBe NavigateToDay(defaultTestDate)
+            cancelAndIgnoreRemainingItems()
+        }
+    }
+
+    @Test
+    fun `When events for date are present, Then emit events`() = runTest {
+        val events = mapOf(defaultTestDate to DateEvents(defaultTestDate, listOf(mockk())))
+        val viewModel = givenViewModel(
+            getEventsForMonth = givenEvents(events),
+        )
+
+        viewModel.test(this) {
+            expectInitialState()
+
+            // When
+            runOnCreate()
+
+            // Then
+            awaitState().events shouldBe events
+        }
+    }
+
+    private fun givenViewModel(
+        dateProvider: () -> LocalDate = { defaultTestDate },
+        getMonthDays: GetMonthDays = GetMonthDays(),
+        getEventsForMonth: GetEventsForMonth = givenNoEvents(),
+    ): CalendarViewModel {
+        return CalendarViewModel(
+            dateProvider = dateProvider,
+            getMonthDays = getMonthDays,
+            getEventsForMonth = getEventsForMonth,
+        )
+    }
+
+    private fun givenNoEvents(): GetEventsForMonth {
+        return mockk {
+            coEvery { this@mockk.invoke(any()) } returns emptyMap()
+        }
+    }
+
+    private fun givenEvents(
+        events: Map<LocalDate, DateEvents> = emptyMap(),
+    ): GetEventsForMonth {
+        return mockk {
+            coEvery { this@mockk.invoke(any()) } returns events
+        }
+    }
 }

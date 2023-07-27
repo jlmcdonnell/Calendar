@@ -15,9 +15,19 @@ fun Routing(navController: NavHostController) {
         startDestination = "/calendar",
     ) {
         composable("/calendar") {
-            CalendarScreen { date ->
-                navController.navigate("/events/create?date=${date.navArg()}")
-            }
+            CalendarScreen(
+                onNavigateCreateEvent = { date ->
+                    navController.navigate("/events/create?date=${date.navArg()}")
+                },
+                onNavigateDay = { date ->
+                    navController.navigate("/calendar/day?date=${date.navArg()}")
+                },
+            )
+        }
+        composable(
+            route = "/calendar/day?date={date}",
+            arguments = listOf(navArgument(name = "date") {}),
+        ) {
         }
         composable(
             route = "/events/create?date={date}",

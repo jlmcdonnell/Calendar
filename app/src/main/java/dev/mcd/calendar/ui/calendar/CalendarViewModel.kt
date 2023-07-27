@@ -56,8 +56,11 @@ class CalendarViewModel @Inject constructor(
 
     fun onDateClicked(date: LocalDate) {
         intent {
-            val calendarDate = state.monthDays?.firstOrNull { it.date == date } ?: return@intent
-            postSideEffect(SideEffect.NavigateCreateEvent(date))
+            if (state.events[date]?.events?.isNotEmpty() == true) {
+                postSideEffect(SideEffect.NavigateToDay(date))
+            } else {
+                postSideEffect(SideEffect.NavigateCreateEvent(date))
+            }
         }
     }
 
@@ -91,6 +94,10 @@ class CalendarViewModel @Inject constructor(
 
     sealed interface SideEffect {
         data class NavigateCreateEvent(
+            val date: LocalDate,
+        ) : SideEffect
+
+        data class NavigateToDay(
             val date: LocalDate,
         ) : SideEffect
     }

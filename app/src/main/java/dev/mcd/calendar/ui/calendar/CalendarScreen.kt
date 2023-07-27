@@ -65,12 +65,12 @@ fun CalendarScreen(
         Column(
             modifier = Modifier.padding(it),
         ) {
-            state.data?.let { monthData ->
+            state.monthDays?.let { monthData ->
                 CalendarView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp),
-                    monthData = monthData,
+                    monthDays = monthData,
                     onCellClicked = { date -> viewModel.onDateClicked(date.date) },
                 )
                 Row(

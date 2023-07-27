@@ -26,11 +26,11 @@ class GetEventsForMonthTest {
 
     private lateinit var repository: EventsRepository
     private lateinit var getEventsForMonth: GetEventsForMonth
-    private lateinit var getMonthData: GetMonthData
+    private lateinit var getMonthDays: GetMonthDays
 
     @Before
     fun setUp() {
-        getMonthData = GetMonthData()
+        getMonthDays = GetMonthDays()
 
         repository = EventsRepositoryImpl(
             events = databaseRule.database.events(),
@@ -42,10 +42,10 @@ class GetEventsForMonthTest {
 
     @Test
     fun `Result contains all dates from MonthData`() = testScope.runTest {
-        val monthData = getMonthData(LocalDate.now())
+        val monthData = getMonthDays(LocalDate.now())
         val eventsMap = getEventsForMonth(monthData)
 
-        monthData.days.onEach { calendarDate ->
+        monthData.onEach { calendarDate ->
             eventsMap shouldHaveKey calendarDate.date
         }
     }
@@ -60,7 +60,7 @@ class GetEventsForMonthTest {
             date = date,
             time = ZonedDateTime.now(),
         )
-        val monthData = getMonthData(date)
+        val monthData = getMonthDays(date)
 
         // When
         val result = getEventsForMonth(monthData)

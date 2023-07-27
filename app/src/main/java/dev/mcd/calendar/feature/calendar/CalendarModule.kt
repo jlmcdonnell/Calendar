@@ -8,7 +8,7 @@ import dev.mcd.calendar.feature.calendar.data.EventsRepositoryImpl
 import dev.mcd.calendar.feature.calendar.data.dao.Events
 import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
 import dev.mcd.calendar.feature.calendar.domain.EventsRepository
-import dev.mcd.calendar.feature.calendar.domain.GetMonthData
+import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class CalendarModule {
 
     @Provides
-    fun getMonthData() = GetMonthData()
+    fun getMonthDays() = GetMonthDays()
 
     @Provides
     @Singleton

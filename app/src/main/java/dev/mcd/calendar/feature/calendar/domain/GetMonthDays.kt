@@ -1,18 +1,17 @@
 package dev.mcd.calendar.feature.calendar.domain
 
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
-import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.precedingMonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.succeedingMonthDays
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
-class GetMonthData {
+class GetMonthDays {
 
-    suspend operator fun invoke(date: LocalDate): MonthData {
-        val days = createCalendarDays(date)
-        return MonthData(days = days)
+    operator fun invoke(date: LocalDate): MonthDays {
+        return createCalendarDays(date)
     }
 
     private fun createCalendarDays(date: LocalDate): List<CalendarDate> {

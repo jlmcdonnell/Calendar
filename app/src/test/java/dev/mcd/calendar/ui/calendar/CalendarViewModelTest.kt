@@ -1,6 +1,6 @@
 package dev.mcd.calendar.ui.calendar
 
-import dev.mcd.calendar.feature.calendar.domain.GetMonthData
+import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
 import dev.mcd.calendar.test.viewmodel.testSideEffect
 import dev.mcd.calendar.test.viewmodel.testState
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
@@ -19,7 +19,7 @@ class CalendarViewModelTest : BehaviorSpec({
         val testDate = LocalDate.of(2023, 7, 25)
         val viewModel = CalendarViewModel(
             dateProvider = { testDate },
-            getMonthData = GetMonthData(),
+            getMonthDays = GetMonthDays(),
         )
         with(viewModel) {
             Then("Emit default state on initialization") {
@@ -37,7 +37,7 @@ class CalendarViewModelTest : BehaviorSpec({
 
             Then("MonthData is generated") {
                 testState {
-                    awaitItem().data!!.shouldNotBeNull()
+                    awaitItem().monthDays!!.shouldNotBeNull()
                 }
             }
 
@@ -52,7 +52,7 @@ class CalendarViewModelTest : BehaviorSpec({
 
                     Then("The data should be updated") {
                         val state = awaitItem()
-                        state.data shouldNotBe currentState.data
+                        state.monthDays shouldNotBe currentState.monthDays
                     }
                 }
             }
@@ -67,7 +67,7 @@ class CalendarViewModelTest : BehaviorSpec({
 
                     Then("The data should be updated") {
                         val state = awaitItem()
-                        state.data shouldNotBe currentState.data
+                        state.monthDays shouldNotBe currentState.monthDays
                     }
                 }
             }
@@ -86,7 +86,7 @@ class CalendarViewModelTest : BehaviorSpec({
 
                         Then("The month data should be updated") {
                             val state = awaitItem()
-                            state.data shouldNotBe currentState.data
+                            state.monthDays shouldNotBe currentState.monthDays
                         }
                     }
                     And("That date is within the current month view") {
@@ -99,7 +99,7 @@ class CalendarViewModelTest : BehaviorSpec({
 
                         Then("The month data should not be updated") {
                             val state = awaitItem()
-                            state.data shouldBeSameInstanceAs currentState.data
+                            state.monthDays shouldBeSameInstanceAs currentState.monthDays
                         }
                     }
                 }

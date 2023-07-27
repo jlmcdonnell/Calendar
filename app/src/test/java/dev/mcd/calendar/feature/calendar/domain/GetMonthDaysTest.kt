@@ -10,31 +10,31 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
-class GetMonthDataTest : BehaviorSpec({
+class GetMonthDaysTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
-    val getMonthData = GetMonthData()
+    val getMonthDays = GetMonthDays()
 
     Given("A test date") {
         val date = LocalDate.of(2023, 7, 26)
 
         When("invoked") {
-            val result = getMonthData(date)
+            val result = getMonthDays(date)
 
             Then("Month data should contain 42 days") {
-                result.days.size shouldBe 42
+                result.size shouldBe 42
             }
 
             Then("The first day should be Monday") {
-                result.days.first().date.dayOfWeek shouldBe DayOfWeek.MONDAY
+                result.first().date.dayOfWeek shouldBe DayOfWeek.MONDAY
             }
 
             Then("The last day should be sunday") {
-                result.days.last().date.dayOfWeek shouldBe DayOfWeek.SUNDAY
+                result.last().date.dayOfWeek shouldBe DayOfWeek.SUNDAY
             }
 
             Then("All dates in month should be increasing within range") {
-                val days = result.days.map { it.date }
+                val days = result.map { it.date }
 
                 val start = date
                     .with(TemporalAdjusters.firstDayOfMonth())

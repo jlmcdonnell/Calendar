@@ -21,7 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
-import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.view.extension.CalendarViewIndices
 import dev.mcd.calendar.ui.calendar.view.extension.calendarCellPadding
@@ -31,7 +31,7 @@ import dev.mcd.calendar.ui.theme.LocalAppColors
 @Composable
 fun CalendarView(
     modifier: Modifier = Modifier,
-    monthData: MonthData,
+    monthDays: MonthDays,
     renderCell: @Composable (CalendarDate) -> Unit = {},
     onCellClicked: (CalendarDate) -> Unit = {},
 ) {
@@ -45,7 +45,7 @@ fun CalendarView(
             .background(appColors.calendarBackground),
     ) {
         calendarLayout?.run {
-            monthData.days.forEachIndexed { i, date ->
+            monthDays.forEachIndexed { i, date ->
                 CalendarViewIndices.run {
                     CalendarCell(
                         index = i,

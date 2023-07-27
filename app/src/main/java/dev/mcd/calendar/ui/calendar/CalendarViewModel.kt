@@ -2,8 +2,8 @@ package dev.mcd.calendar.ui.calendar
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.mcd.calendar.feature.calendar.domain.GetMonthData
-import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
+import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
 import org.orbitmvi.orbit.ContainerHost
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val dateProvider: () -> LocalDate,
-    private val getMonthData: GetMonthData,
+    private val getMonthDays: GetMonthDays,
 ) : ViewModel(), ContainerHost<State, SideEffect> {
 
     override val container = container<State, SideEffect>(
@@ -53,15 +53,15 @@ class CalendarViewModel @Inject constructor(
 
     fun onDateClicked(date: LocalDate) {
         intent {
-            val calendarDate = state.data?.days?.firstOrNull { it.date == date } ?: return@intent
+            val calendarDate = state.monthDays?.firstOrNull { it.date == date } ?: return@intent
             postSideEffect(SideEffect.NavigateCreateEvent(date))
         }
     }
 
     context(SimpleSyntax<State, SideEffect>)
     private suspend fun updateDate(date: LocalDate) {
-        val newMonthData = if (state.data?.days?.any { it.date == date } != true) {
-            getMonthData(date)
+        val newMonthData = if (state.monthDays?.any { it.date == date } != true) {
+            getMonthDays(date)
         } else {
             null
         }
@@ -69,14 +69,14 @@ class CalendarViewModel @Inject constructor(
         reduce {
             state.copy(
                 date = date,
-                data = newMonthData ?: state.data,
+                monthDays = newMonthData ?: state.monthDays,
             )
         }
     }
 
     data class State(
         val date: LocalDate? = null,
-        val data: MonthData? = null,
+        val monthDays: MonthDays? = null,
     )
 
     sealed interface SideEffect {

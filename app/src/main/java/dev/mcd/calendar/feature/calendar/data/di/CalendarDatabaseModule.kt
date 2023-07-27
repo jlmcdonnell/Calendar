@@ -1,4 +1,4 @@
-package dev.mcd.calendar.feature.calendar.data
+package dev.mcd.calendar.feature.calendar.data.di
 
 import android.content.Context
 import androidx.room.Room
@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import dev.mcd.calendar.feature.calendar.data.dao.Events
 import dev.mcd.calendar.feature.calendar.data.database.CalendarDatabase
 import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
+import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -17,13 +18,24 @@ import javax.inject.Singleton
 class CalendarDatabaseModule {
 
     @Provides
+    @CalendarDBName
+    fun provideCalendarDBName() = DATABASE_NAME
+
+    @Provides
+    @CalendarDBFolder
+    fun provideCalendarDBFolder(
+        @ApplicationContext context: Context,
+    ): File = File(context.filesDir, "databases")
+
+    @Provides
     @Singleton
     fun calendarDatabase(
         @ApplicationContext context: Context,
+        @CalendarDBName dbName: String,
     ): CalendarDatabase = Room.databaseBuilder(
         context = context,
         klass = CalendarDatabase::class.java,
-        name = DATABASE_NAME,
+        name = dbName,
     ).build()
 
     @Provides

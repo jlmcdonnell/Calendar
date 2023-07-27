@@ -21,6 +21,7 @@ class EventsRepositoryImplTest {
 
     @get:Rule
     val database = calendarDatabaseRule()
+
     private val events: Events by database
 
     private val mapper = EventEntityMapper()

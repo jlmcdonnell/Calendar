@@ -18,6 +18,9 @@ interface Events {
     @Query("SELECT * FROM events WHERE id = :id")
     suspend fun findById(id: Long): EventEntity
 
+    @Query("SELECT count() FROM events WHERE date = :date")
+    suspend fun eventCount(date: LocalDate): Int
+
     @Update
     suspend fun updateEvent(event: EventEntity)
 

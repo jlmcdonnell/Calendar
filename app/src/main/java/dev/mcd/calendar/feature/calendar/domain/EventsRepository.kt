@@ -19,5 +19,7 @@ interface EventsRepository {
 
     suspend fun findByDate(date: LocalDate): List<Event>
 
+    suspend fun eventCount(date: LocalDate): Int
+
     suspend fun deleteEvent(id: Long)
 }

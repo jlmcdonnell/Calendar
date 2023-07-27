@@ -2,9 +2,9 @@ package dev.mcd.calendar.ui.calendar.month
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
+import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
+import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.State
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class CalendarMonthViewModel @Inject constructor(
     private val dateProvider: () -> LocalDate,
     private val getMonthDays: GetMonthDays,
-    private val getEventsForMonth: GetEventsForMonth,
+    private val getEventCountsForMonth: GetEventCountsForMonth,
 ) : ViewModel(), ContainerHost<State, SideEffect> {
 
     override val container = container<State, SideEffect>(
@@ -56,7 +56,7 @@ class CalendarMonthViewModel @Inject constructor(
 
     fun onDateClicked(date: LocalDate) {
         intent {
-            if (state.events[date]?.events?.isNotEmpty() == true) {
+            if ((state.events[date]?.events ?: 0) > 0) {
                 postSideEffect(SideEffect.NavigateToDay(date))
             } else {
                 postSideEffect(SideEffect.NavigateCreateEvent(date))
@@ -72,7 +72,7 @@ class CalendarMonthViewModel @Inject constructor(
             null
         }
         val events = if (newMonthDays != null) {
-            getEventsForMonth(newMonthDays)
+            getEventCountsForMonth(newMonthDays)
         } else {
             null
         }
@@ -89,7 +89,7 @@ class CalendarMonthViewModel @Inject constructor(
     data class State(
         val date: LocalDate? = null,
         val monthDays: MonthDays? = null,
-        val events: Map<LocalDate, DateEvents> = emptyMap(),
+        val events: Map<LocalDate, DateEventCount> = emptyMap(),
     )
 
     sealed interface SideEffect {

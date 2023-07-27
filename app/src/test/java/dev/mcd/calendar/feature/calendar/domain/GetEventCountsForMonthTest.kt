@@ -17,7 +17,7 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 
 @RunWith(RobolectricTestRunner::class)
-class GetEventsForMonthTest {
+class GetEventCountsForMonthTest {
 
     private val testScope = TestScope()
 
@@ -25,7 +25,7 @@ class GetEventsForMonthTest {
     val databaseRule = calendarDatabaseRule()
 
     private lateinit var repository: EventsRepository
-    private lateinit var getEventsForMonth: GetEventsForMonth
+    private lateinit var getEventCountsForMonth: GetEventCountsForMonth
     private lateinit var getMonthDays: GetMonthDays
 
     @Before
@@ -37,13 +37,13 @@ class GetEventsForMonthTest {
             mapper = EventEntityMapper(),
             dispatcher = testScope.coroutineContext[CoroutineDispatcher.Key]!!,
         )
-        getEventsForMonth = GetEventsForMonth(repository)
+        getEventCountsForMonth = GetEventCountsForMonth(repository)
     }
 
     @Test
     fun `Result contains all dates from MonthData`() = testScope.runTest {
         val monthData = getMonthDays(LocalDate.now())
-        val eventsMap = getEventsForMonth(monthData)
+        val eventsMap = getEventCountsForMonth(monthData)
 
         monthData.onEach { calendarDate ->
             eventsMap shouldHaveKey calendarDate.date
@@ -51,10 +51,11 @@ class GetEventsForMonthTest {
     }
 
     @Test
-    fun `Result contains event for date`() = testScope.runTest {
+    fun `Result contains 1 event for date`() = testScope.runTest {
         // Given
         val date = LocalDate.now()
-        val event = repository.addEvent(
+
+        repository.addEvent(
             title = "title",
             description = "description",
             date = date,
@@ -63,10 +64,10 @@ class GetEventsForMonthTest {
         val monthData = getMonthDays(date)
 
         // When
-        val result = getEventsForMonth(monthData)
+        val result = getEventCountsForMonth(monthData)
 
         // Then
-        result.getValue(date).events[0] shouldBe event
+        result.getValue(date).events shouldBe 1
         result.getValue(date).date shouldBe date
     }
 }

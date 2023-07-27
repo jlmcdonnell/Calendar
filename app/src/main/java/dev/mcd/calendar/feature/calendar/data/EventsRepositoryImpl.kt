@@ -52,6 +52,12 @@ class EventsRepositoryImpl(
         }
     }
 
+    override suspend fun eventCount(date: LocalDate): Int {
+        return withContext(dispatcher) {
+            events.eventCount(date)
+        }
+    }
+
     override suspend fun deleteEvent(id: Long) {
         withContext(dispatcher) {
             events.deleteEvent(id)

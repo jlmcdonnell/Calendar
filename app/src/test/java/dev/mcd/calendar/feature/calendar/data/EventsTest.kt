@@ -65,6 +65,22 @@ class EventsTest {
     }
 
     @Test
+    fun `Query event count for date`() {
+        runBlocking {
+            val date = LocalDate.of(2023, 7, 26)
+            val entity = EventEntity(
+                id = 0,
+                title = "Hello",
+                description = "Description",
+                date = date,
+                time = ZonedDateTime.now(),
+            )
+            events.addEvent(entity)
+            events.eventCount(date) shouldBe 1
+        }
+    }
+
+    @Test
     fun `Update entity`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)

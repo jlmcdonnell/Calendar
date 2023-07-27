@@ -1,8 +1,8 @@
 package dev.mcd.calendar.ui.calendar.month
 
-import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
+import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
+import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -112,10 +112,10 @@ class CalendarMonthViewModelTest {
 
     @Test
     fun `When a date with Events is clicked, Then Navigate to Day`() = runTest {
-        val events = mapOf(defaultTestDate to DateEvents(defaultTestDate, listOf(mockk())))
+        val events = mapOf(defaultTestDate to DateEventCount(defaultTestDate, 1))
 
         val viewModel = givenViewModel(
-            getEventsForMonth = givenEvents(events),
+            getEventCountsForMonth = givenEvents(events),
         )
 
         viewModel.test(this) {
@@ -134,9 +134,9 @@ class CalendarMonthViewModelTest {
 
     @Test
     fun `When events for date are present, Then emit events`() = runTest {
-        val events = mapOf(defaultTestDate to DateEvents(defaultTestDate, listOf(mockk())))
+        val events = mapOf(defaultTestDate to DateEventCount(defaultTestDate, 1))
         val viewModel = givenViewModel(
-            getEventsForMonth = givenEvents(events),
+            getEventCountsForMonth = givenEvents(events),
         )
 
         viewModel.test(this) {
@@ -153,24 +153,24 @@ class CalendarMonthViewModelTest {
     private fun givenViewModel(
         dateProvider: () -> LocalDate = { defaultTestDate },
         getMonthDays: GetMonthDays = GetMonthDays(),
-        getEventsForMonth: GetEventsForMonth = givenNoEvents(),
+        getEventCountsForMonth: GetEventCountsForMonth = givenNoEvents(),
     ): CalendarMonthViewModel {
         return CalendarMonthViewModel(
             dateProvider = dateProvider,
             getMonthDays = getMonthDays,
-            getEventsForMonth = getEventsForMonth,
+            getEventCountsForMonth = getEventCountsForMonth,
         )
     }
 
-    private fun givenNoEvents(): GetEventsForMonth {
+    private fun givenNoEvents(): GetEventCountsForMonth {
         return mockk {
             coEvery { this@mockk.invoke(any()) } returns emptyMap()
         }
     }
 
     private fun givenEvents(
-        events: Map<LocalDate, DateEvents> = emptyMap(),
-    ): GetEventsForMonth {
+        events: Map<LocalDate, DateEventCount> = emptyMap(),
+    ): GetEventCountsForMonth {
         return mockk {
             coEvery { this@mockk.invoke(any()) } returns events
         }

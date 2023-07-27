@@ -37,7 +37,7 @@ class EventsRepositoryImplTest {
     }
 
     @Test
-    fun `Insert entity`() = testScope.runTest {
+    fun `Insert event`() = testScope.runTest {
         repository.addEvent(
             title = "Hello",
             description = "Description",
@@ -47,7 +47,7 @@ class EventsRepositoryImplTest {
     }
 
     @Test
-    fun `Query entity for date`() = testScope.runTest {
+    fun `Query event for date`() = testScope.runTest {
         val date = LocalDate.of(2023, 7, 26)
 
         repository.addEvent(
@@ -61,7 +61,7 @@ class EventsRepositoryImplTest {
     }
 
     @Test
-    fun `Query entity for ID`() = testScope.runTest {
+    fun `Query event for ID`() = testScope.runTest {
         val date = LocalDate.of(2023, 7, 26)
 
         val entity = repository.addEvent(
@@ -72,6 +72,20 @@ class EventsRepositoryImplTest {
         )
 
         repository.findById(entity.id) shouldBe entity
+    }
+
+    @Test
+    fun `Query event count for date`() = testScope.runTest {
+        val date = LocalDate.of(2023, 7, 26)
+
+        repository.addEvent(
+            title = "Hello",
+            description = "Description",
+            date = date,
+            time = ZonedDateTime.now(),
+        )
+
+        repository.eventCount(date) shouldBe 1
     }
 
     @Test

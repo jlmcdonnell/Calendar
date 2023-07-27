@@ -19,32 +19,32 @@ class EventsTest {
     private val events by database
 
     @Test
-    fun `Insert entity`() {
+    fun `Insert event`() {
         runBlocking {
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = LocalDate.now(),
                 time = ZonedDateTime.now(),
             )
-            events.addEvent(entity)
+            events.addEvent(event)
         }
     }
 
     @Test
-    fun `Query entity for date`() {
+    fun `Query event for date`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            events.addEvent(entity)
-            events.findByDate(date) shouldBe listOf(entity)
+            events.addEvent(event)
+            events.findByDate(date) shouldBe listOf(event)
         }
     }
 
@@ -52,15 +52,15 @@ class EventsTest {
     fun `Query entity for ID`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val id = events.addEvent(entity)
-            events.findById(id) shouldBe entity
+            val id = events.addEvent(event)
+            events.findById(id) shouldBe event
         }
     }
 
@@ -68,14 +68,14 @@ class EventsTest {
     fun `Query event count for date`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            events.addEvent(entity)
+            events.addEvent(event)
             events.eventCount(date) shouldBe 1
         }
     }
@@ -84,32 +84,32 @@ class EventsTest {
     fun `Update entity`() {
         runBlocking {
             val date = LocalDate.of(2023, 7, 26)
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val update = entity.copy(title = "world")
-            events.addEvent(entity)
+            val update = event.copy(title = "world")
+            events.addEvent(event)
             events.updateEvent(update)
             events.findByDate(date) shouldBe listOf(update)
         }
     }
 
     @Test
-    fun `Delete entity by ID`() {
+    fun `Delete event by ID`() {
         runBlocking {
             val date = LocalDate.now()
-            val entity = EventEntity(
+            val event = EventEntity(
                 id = 0,
                 title = "Hello",
                 description = "Description",
                 date = date,
                 time = ZonedDateTime.now(),
             )
-            val id = events.addEvent(entity)
+            val id = events.addEvent(event)
             events.deleteEvent(id)
             events.findByDate(date) shouldBe emptyList()
         }

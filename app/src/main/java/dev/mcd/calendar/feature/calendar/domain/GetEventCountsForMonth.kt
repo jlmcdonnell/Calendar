@@ -16,12 +16,13 @@ class GetEventCountsForMonth(
                 async {
                     DateEventCount(
                         date = date.date,
-                        events = repository.eventCount(date.date),
+                        count = repository.eventCount(date.date),
                     )
                 }
             }
 
             awaitAll(*eventsDeferred.toTypedArray())
+                .filter { it.count > 0 }
                 .associateBy { it.date }
         }
     }

@@ -13,15 +13,19 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
+import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
+import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateCreateEvent
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateToDay
 import dev.mcd.calendar.ui.calendar.month.view.CalendarView
+import dev.mcd.calendar.ui.calendar.month.view.EventCountText
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import java.time.LocalDate
@@ -68,32 +72,57 @@ fun CalendarMonthScreen(
         Column(
             modifier = Modifier.padding(it),
         ) {
-            state.monthDays?.let { monthData ->
-                CalendarView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp),
-                    monthDays = monthData,
-                    onCellClicked = { date -> viewModel.onDateClicked(date.date) },
+            if (state.monthDays != null) {
+                Calendar(
+                    monthDays = state.monthDays!!,
+                    events = state.events,
+                    onPreviousMonth = { viewModel.onPreviousMonth() },
+                    onNextMonth = { viewModel.onNextMonth() },
+                    onDateClicked = { date -> viewModel.onDateClicked(date) },
                 )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    TextButton(
-                        onClick = { viewModel.onPreviousMonth() },
-                    ) {
-                        Text(text = stringResource(id = R.string.calendar_previous_month))
-                    }
-                    TextButton(
-                        onClick = { viewModel.onNextMonth() },
-                    ) {
-                        Text(text = stringResource(id = R.string.calendar_next_month))
-                    }
-                }
             }
+        }
+    }
+}
+
+@Composable
+private fun Calendar(
+    monthDays: MonthDays,
+    events: Map<LocalDate, DateEventCount>,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+    onDateClicked: (LocalDate) -> Unit,
+) {
+    CalendarView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        monthDays = monthDays,
+        onCellClicked = { date -> onDateClicked(date.date) },
+        renderCell = { date ->
+            events[date.date]?.let { count ->
+                EventCountText(
+                    modifier = Modifier.align(Alignment.Center),
+                    count = count.count,
+                )
+            }
+        },
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        TextButton(
+            onClick = { onPreviousMonth() },
+        ) {
+            Text(text = stringResource(id = R.string.calendar_previous_month))
+        }
+        TextButton(
+            onClick = { onNextMonth() },
+        ) {
+            Text(text = stringResource(id = R.string.calendar_next_month))
         }
     }
 }

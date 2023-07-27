@@ -4,5 +4,5 @@ import java.time.LocalDate
 
 data class DateEventCount(
     val date: LocalDate,
-    val events: Int,
+    val count: Int,
 )

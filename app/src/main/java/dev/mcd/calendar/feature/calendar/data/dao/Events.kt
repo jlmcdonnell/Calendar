@@ -12,7 +12,7 @@ interface Events {
     @Insert
     suspend fun addEvent(event: EventEntity): Long
 
-    @Query("SELECT * FROM events WHERE date = :date")
+    @Query("SELECT * FROM events WHERE date = :date ORDER BY time ASC")
     suspend fun findByDate(date: LocalDate): List<EventEntity>
 
     @Query("SELECT * FROM events WHERE id = :id")

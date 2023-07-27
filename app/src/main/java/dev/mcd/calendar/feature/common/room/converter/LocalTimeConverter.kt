@@ -1,20 +1,20 @@
 package dev.mcd.calendar.feature.common.room.converter
 
 import androidx.room.TypeConverter
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
-object ZonedDateTimeConverter {
+object LocalTimeConverter {
     @TypeConverter
-    fun toDate(dateString: String?): ZonedDateTime? {
+    fun toDate(dateString: String?): LocalTime? {
         return if (dateString == null) {
             null
         } else {
-            ZonedDateTime.parse(dateString)
+            LocalTime.parse(dateString)
         }
     }
 
     @TypeConverter
-    fun toDateString(date: ZonedDateTime?): String? {
+    fun toDateString(date: LocalTime?): String? {
         return date?.toString()
     }
 }

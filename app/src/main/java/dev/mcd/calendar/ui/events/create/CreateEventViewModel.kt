@@ -12,7 +12,6 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -63,13 +62,12 @@ class CreateEventViewModel @Inject constructor(
         intent {
             val date = state.date ?: return@intent
             val time = state.time ?: return@intent
-            val zonedTime = time.atDate(date).atZone(ZoneId.systemDefault())
 
             eventsRepository.addEvent(
                 title = title,
                 description = description ?: "",
                 date = date,
-                time = zonedTime,
+                time = time,
             )
 
             postSideEffect(SideEffect.NavigateBack)

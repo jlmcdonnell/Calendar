@@ -3,7 +3,7 @@ package dev.mcd.calendar.feature.calendar.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 @Entity(
     tableName = "events",
@@ -14,5 +14,5 @@ data class EventEntity(
     val title: String,
     val description: String,
     val date: LocalDate,
-    val time: ZonedDateTime,
+    val time: LocalTime,
 )

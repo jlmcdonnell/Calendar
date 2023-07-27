@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 @RunWith(RobolectricTestRunner::class)
 class EventsTest {
@@ -26,7 +26,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = LocalDate.now(),
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             events.addEvent(event)
         }
@@ -41,7 +41,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = date,
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             events.addEvent(event)
             events.findByDate(date) shouldBe listOf(event)
@@ -57,7 +57,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = date,
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             val id = events.addEvent(event)
             events.findById(id) shouldBe event
@@ -73,7 +73,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = date,
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             events.addEvent(event)
             events.eventCount(date) shouldBe 1
@@ -89,7 +89,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = date,
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             val update = event.copy(title = "world")
             events.addEvent(event)
@@ -107,7 +107,7 @@ class EventsTest {
                 title = "Hello",
                 description = "Description",
                 date = date,
-                time = ZonedDateTime.now(),
+                time = LocalTime.now(),
             )
             val id = events.addEvent(event)
             events.deleteEvent(id)

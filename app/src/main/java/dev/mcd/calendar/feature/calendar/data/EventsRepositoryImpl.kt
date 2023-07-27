@@ -8,7 +8,7 @@ import dev.mcd.calendar.feature.calendar.domain.entity.Event
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 class EventsRepositoryImpl(
     private val events: Events,
@@ -20,7 +20,7 @@ class EventsRepositoryImpl(
         title: String,
         description: String,
         date: LocalDate,
-        time: ZonedDateTime,
+        time: LocalTime,
     ): Event {
         return withContext(dispatcher) {
             val event = EventEntity(

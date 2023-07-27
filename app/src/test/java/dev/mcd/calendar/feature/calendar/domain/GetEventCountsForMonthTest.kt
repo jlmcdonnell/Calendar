@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 @RunWith(RobolectricTestRunner::class)
 class GetEventCountsForMonthTest {
@@ -48,7 +48,7 @@ class GetEventCountsForMonthTest {
             title = "title",
             description = "description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
         val monthData = getMonthDays(date)
 

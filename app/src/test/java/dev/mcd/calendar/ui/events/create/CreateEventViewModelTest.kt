@@ -13,7 +13,6 @@ import org.junit.Test
 import org.orbitmvi.orbit.test.test
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 
 class CreateEventViewModelTest {
 
@@ -96,7 +95,7 @@ class CreateEventViewModelTest {
                 title = "title",
                 description = "description",
                 date = date,
-                time = date.atStartOfDay(ZoneId.systemDefault()),
+                time = LocalTime.MIDNIGHT,
             )
         }
     }

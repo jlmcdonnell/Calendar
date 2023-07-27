@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 @RunWith(RobolectricTestRunner::class)
 class EventsRepositoryImplTest {
@@ -42,7 +42,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = LocalDate.now(),
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
     }
 
@@ -54,7 +54,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
 
         repository.findByDate(date).first().title shouldBe "Hello"
@@ -68,7 +68,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
 
         repository.findById(entity.id) shouldBe entity
@@ -82,7 +82,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
 
         repository.eventCount(date) shouldBe 1
@@ -96,7 +96,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
 
         val event = repository.findByDate(date).first()
@@ -114,7 +114,7 @@ class EventsRepositoryImplTest {
             title = "Hello",
             description = "Description",
             date = date,
-            time = ZonedDateTime.now(),
+            time = LocalTime.now(),
         )
 
         repository.deleteEvent(entity.id)

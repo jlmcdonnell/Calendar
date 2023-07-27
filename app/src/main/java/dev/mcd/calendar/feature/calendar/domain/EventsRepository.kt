@@ -2,7 +2,7 @@ package dev.mcd.calendar.feature.calendar.domain
 
 import dev.mcd.calendar.feature.calendar.domain.entity.Event
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalTime
 
 interface EventsRepository {
 
@@ -10,7 +10,7 @@ interface EventsRepository {
         title: String,
         description: String,
         date: LocalDate,
-        time: ZonedDateTime,
+        time: LocalTime,
     ): Event
 
     suspend fun findById(id: Long): Event

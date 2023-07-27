@@ -1,6 +1,7 @@
 package dev.mcd.calendar.ui.calendar.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -22,18 +23,17 @@ import androidx.compose.ui.unit.sp
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
+import dev.mcd.calendar.ui.calendar.view.extension.CalendarViewIndices
+import dev.mcd.calendar.ui.calendar.view.extension.calendarCellPadding
+import dev.mcd.calendar.ui.calendar.view.extension.calendarLayout
 import dev.mcd.calendar.ui.theme.LocalAppColors
-
-private val topEdgeIndices = listOf(0, 1, 2, 3, 4, 5, 6)
-private val bottomEdgeIndices = listOf(35, 36, 37, 38, 39, 40, 41)
-private val startEdgeIndices = listOf(0, 7, 14, 21, 28, 35)
-private val endEdgeIndices = listOf(6, 13, 20, 27, 34, 41)
 
 @Composable
 fun CalendarView(
     modifier: Modifier = Modifier,
     monthData: MonthData,
     renderCell: @Composable (CalendarDate) -> Unit = {},
+    onCellClicked: (CalendarDate) -> Unit = {},
 ) {
     var calendarLayout by remember { mutableStateOf<CalendarLayout?>(null) }
     val appColors = LocalAppColors.current
@@ -46,46 +46,47 @@ fun CalendarView(
     ) {
         calendarLayout?.run {
             monthData.days.forEachIndexed { i, date ->
-                CalendarCell(
-                    index = i,
-                    date = date,
-                    renderCell = {
-                        Column {
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
-
-                        renderCell(date)
-                    },
-                )
+                CalendarViewIndices.run {
+                    CalendarCell(
+                        index = i,
+                        date = date,
+                        onCellClicked = onCellClicked,
+                        renderCell = {
+                            Column {
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
+                            renderCell(date)
+                        },
+                    )
+                }
             }
         }
     }
 }
 
-context(CalendarLayout)
+context(CalendarLayout, CalendarViewIndices)
 @Composable
 fun CalendarCell(
     index: Int,
     date: CalendarDate,
     renderCell: @Composable () -> Unit = {},
+    onCellClicked: (CalendarDate) -> Unit = {},
 ) {
     val appColors = LocalAppColors.current
 
     Box(
         modifier = Modifier
             .size(cellSize)
-            .padding(
-                top = if (index in topEdgeIndices) 2.dp else 1.dp,
-                bottom = if (index in bottomEdgeIndices) 2.dp else 1.dp,
-                start = if (index in startEdgeIndices) 2.dp else 1.dp,
-                end = if (index in endEdgeIndices) 2.dp else 1.dp,
-            ).clip(RoundedCornerShape(2.dp)).let {
+            .calendarCellPadding(index)
+            .clip(RoundedCornerShape(2.dp))
+            .let {
                 if (date.isInMonth) {
                     it.background(appColors.inMonthBackground)
                 } else {
                     it.background(appColors.outOfMonthBackground)
                 }
-            },
+            }
+            .clickable { onCellClicked(date) },
     ) {
         Text(
             modifier = Modifier.padding(start = 3.dp),

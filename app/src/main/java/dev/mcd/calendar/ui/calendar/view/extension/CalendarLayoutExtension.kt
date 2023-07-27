@@ -1,4 +1,4 @@
-package dev.mcd.calendar.ui.calendar.view
+package dev.mcd.calendar.ui.calendar.view.extension
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import dev.mcd.calendar.ui.calendar.view.CalendarLayout
 
 fun Modifier.calendarLayout(
     onLayout: (CalendarLayout) -> Unit = {},

@@ -129,6 +129,7 @@ fun CreateEventScreen(
 
     if (showDatePicker) {
         DatePicker(
+            initialDate = state.date,
             onDismissRequest = { showDatePicker = false },
             onUpdateDate = { date ->
                 viewModel.onUpdateDate(date)

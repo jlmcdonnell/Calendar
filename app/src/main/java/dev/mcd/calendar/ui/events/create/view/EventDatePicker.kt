@@ -10,13 +10,17 @@ import androidx.compose.ui.res.stringResource
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.time.Duration.Companion.days
 
 @Composable
 fun DatePicker(
+    initialDate: LocalDate?,
     onDismissRequest: () -> Unit,
     onUpdateDate: (LocalDate) -> Unit,
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialDate?.toEpochDay()?.days?.inWholeMilliseconds,
+    )
 
     DatePickerDialog(
         onDismissRequest = {

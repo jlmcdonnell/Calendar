@@ -2,6 +2,7 @@ package dev.mcd.calendar.ui.events.create
 
 import androidx.lifecycle.SavedStateHandle
 import dev.mcd.calendar.feature.calendar.domain.EventsRepository
+import dev.mcd.calendar.ui.events.create.CreateEventViewModel.SideEffect.NavigateBack
 import dev.mcd.calendar.ui.routing.navArg
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -86,6 +87,8 @@ class CreateEventViewModelTest {
                 title = "title",
                 description = "description",
             )
+
+            awaitSideEffect()
         }
 
         coVerify {
@@ -95,6 +98,30 @@ class CreateEventViewModelTest {
                 date = date,
                 time = date.atStartOfDay(ZoneId.systemDefault()),
             )
+        }
+    }
+
+    @Test
+    fun `When event is added, Navigate Back`() = runTest {
+        val date = LocalDate.now()
+        val repository = mockk<EventsRepository> {
+            coEvery { addEvent(any(), any(), any(), any()) } returns mockk()
+        }
+        val vm = givenViewModel(eventsRepository = repository)
+
+        vm.test(this) {
+            expectInitialState()
+            runOnCreate().join()
+
+            vm.onUpdateDate(date)
+            awaitState()
+
+            vm.onAddEvent(
+                title = "title",
+                description = "description",
+            )
+
+            awaitSideEffect() shouldBe NavigateBack
         }
     }
 

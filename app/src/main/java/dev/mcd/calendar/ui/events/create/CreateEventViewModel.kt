@@ -7,6 +7,7 @@ import dev.mcd.calendar.feature.calendar.domain.EventsRepository
 import dev.mcd.calendar.ui.routing.localDateArg
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
@@ -70,6 +71,8 @@ class CreateEventViewModel @Inject constructor(
                 date = date,
                 time = zonedTime,
             )
+
+            postSideEffect(SideEffect.NavigateBack)
         }
     }
 
@@ -80,5 +83,7 @@ class CreateEventViewModel @Inject constructor(
         val description: String? = null,
     )
 
-    sealed interface SideEffect
+    sealed interface SideEffect {
+        data object NavigateBack : SideEffect
+    }
 }

@@ -4,11 +4,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.mcd.calendar.feature.calendar.data.Events
 import dev.mcd.calendar.feature.calendar.data.EventsRepositoryImpl
+import dev.mcd.calendar.feature.calendar.data.dao.Events
 import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
 import dev.mcd.calendar.feature.calendar.domain.EventsRepository
 import dev.mcd.calendar.feature.calendar.domain.GetMonthData
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -26,5 +27,6 @@ class CalendarModule {
     ): EventsRepository = EventsRepositoryImpl(
         events = events,
         mapper = mapper,
+        dispatcher = Dispatchers.IO,
     )
 }

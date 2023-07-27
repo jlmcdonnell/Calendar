@@ -15,15 +15,13 @@ import java.time.LocalDate
 class CalendarViewModelTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
-    val testDate = LocalDate.of(2023, 7, 25)
-
-    val viewModel = CalendarViewModel(
-        dateProvider = { testDate },
-        getMonthData = GetMonthData(),
-    )
-
-    with(viewModel) {
-        Given("The ViewModel is initialized") {
+    Given("The ViewModel is initialized") {
+        val testDate = LocalDate.of(2023, 7, 25)
+        val viewModel = CalendarViewModel(
+            dateProvider = { testDate },
+            getMonthData = GetMonthData(),
+        )
+        with(viewModel) {
             Then("Emit default state on initialization") {
                 testState(consumeInitialState = false) {
                     awaitItem() shouldBe CalendarViewModel.State()

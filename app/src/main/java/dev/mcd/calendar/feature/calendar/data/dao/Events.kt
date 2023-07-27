@@ -1,4 +1,4 @@
-package dev.mcd.calendar.feature.calendar.data
+package dev.mcd.calendar.feature.calendar.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

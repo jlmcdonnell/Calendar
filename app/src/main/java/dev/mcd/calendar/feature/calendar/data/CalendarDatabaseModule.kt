@@ -7,6 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.mcd.calendar.feature.calendar.data.dao.Events
+import dev.mcd.calendar.feature.calendar.data.database.CalendarDatabase
 import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
 import javax.inject.Singleton
 

@@ -1,34 +1,22 @@
 package dev.mcd.calendar.feature.calendar.data
 
-import androidx.room.Room
 import dev.mcd.calendar.feature.calendar.data.entity.EventEntity
+import dev.mcd.calendar.test.feature.calendar.data.database.calendarDatabaseRule
 import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
-import org.junit.After
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
 @RunWith(RobolectricTestRunner::class)
 class EventsTest {
 
-    private lateinit var database: CalendarDatabase
-    private lateinit var events: Events
-
-    @Before
-    fun setUp() {
-        database = createDatabase()
-        events = database.events()
-    }
-
-    @After
-    fun tearDown() {
-        database.close()
-    }
+    @get:Rule
+    val database = calendarDatabaseRule()
+    private val events by database
 
     @Test
     fun `Insert entity`() {
@@ -109,12 +97,5 @@ class EventsTest {
             events.deleteEvent(id)
             events.findByDate(date) shouldBe emptyList()
         }
-    }
-
-    private fun createDatabase(): CalendarDatabase {
-        return Room.inMemoryDatabaseBuilder(
-            context = RuntimeEnvironment.getApplication(),
-            klass = CalendarDatabase::class.java,
-        ).build()
     }
 }

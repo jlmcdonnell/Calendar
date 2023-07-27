@@ -54,9 +54,7 @@ class CalendarViewModel @Inject constructor(
     fun onDateClicked(date: LocalDate) {
         intent {
             val calendarDate = state.data?.days?.firstOrNull { it.date == date } ?: return@intent
-            if (calendarDate.eventCount == 0) {
-                postSideEffect(SideEffect.NavigateCreateEvent(date))
-            }
+            postSideEffect(SideEffect.NavigateCreateEvent(date))
         }
     }
 

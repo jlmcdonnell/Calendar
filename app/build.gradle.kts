@@ -50,7 +50,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -96,6 +96,7 @@ dependencies {
     implementation("org.orbit-mvi:orbit-core:6.0.0")
     implementation("org.orbit-mvi:orbit-viewmodel:6.0.0")
     implementation("org.orbit-mvi:orbit-compose:6.0.0")
+    testImplementation("org.orbit-mvi:orbit-test:6.0.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.5.2")

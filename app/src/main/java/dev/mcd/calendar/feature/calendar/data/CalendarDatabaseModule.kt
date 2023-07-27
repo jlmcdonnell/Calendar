@@ -35,6 +35,6 @@ class CalendarDatabaseModule {
     fun eventEntityMapper() = EventEntityMapper()
 
     private companion object {
-        const val DATABASE_NAME = "calendar"
+        const val DATABASE_NAME = "calendar.db"
     }
 }

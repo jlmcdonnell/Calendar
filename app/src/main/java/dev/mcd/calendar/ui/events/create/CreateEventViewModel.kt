@@ -79,8 +79,6 @@ class CreateEventViewModel @Inject constructor(
     data class State(
         val date: LocalDate? = null,
         val time: LocalTime? = null,
-        val title: String? = null,
-        val description: String? = null,
     )
 
     sealed interface SideEffect {

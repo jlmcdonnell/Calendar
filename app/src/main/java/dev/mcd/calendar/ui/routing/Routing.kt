@@ -33,7 +33,11 @@ fun Routing(navController: NavHostController) {
             route = "/events/create?date={date}",
             arguments = listOf(navArgument(name = "date") {}),
         ) {
-            CreateEventScreen()
+            CreateEventScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+            )
         }
     }
 }

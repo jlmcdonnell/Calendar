@@ -1,10 +1,20 @@
 <resources>
     <string name="app_name">Calendar</string>
 
+    <string name="back">Back</string>
+
     <!-- Calendar Screen -->
     <string name="calendar_next_month">Next Month</string>
     <string name="calendar_previous_month">Previous Month</string>
 
     <!-- Create Event Screen -->
     <string name="create_event_title">New Event</string>
+    <string name="create_event_label_title">Title</string>
+    <string name="create_event_label_description">Description</string>
+    <string name="create_event_add_event">Add Event</string>
+    <string name="create_event_description_date">Select Date</string>
+    <string name="create_event_description_time">Select Time</string>
+
+    <!-- Time Picker -->
+    <string name="time_picker_title">Select Time</string>
 </resources>

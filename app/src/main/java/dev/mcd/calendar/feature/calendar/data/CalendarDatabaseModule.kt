@@ -20,11 +20,11 @@ class CalendarDatabaseModule {
     @Singleton
     fun calendarDatabase(
         @ApplicationContext context: Context,
-    ) = Room.databaseBuilder(
+    ): CalendarDatabase = Room.databaseBuilder(
         context = context,
         klass = CalendarDatabase::class.java,
         name = DATABASE_NAME,
-    )
+    ).build()
 
     @Provides
     fun events(database: CalendarDatabase): Events {

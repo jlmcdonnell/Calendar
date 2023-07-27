@@ -2,7 +2,9 @@ package dev.mcd.calendar.ui.calendar
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.mcd.calendar.feature.calendar.domain.GetEventsForMonth
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
+import dev.mcd.calendar.feature.calendar.domain.entity.DateEvents
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
 import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(
     private val dateProvider: () -> LocalDate,
     private val getMonthDays: GetMonthDays,
+    private val getEventsForMonth: GetEventsForMonth,
 ) : ViewModel(), ContainerHost<State, SideEffect> {
 
     override val container = container<State, SideEffect>(
@@ -26,7 +29,7 @@ class CalendarViewModel @Inject constructor(
         onCreate = {
             intent {
                 val date = dateProvider()
-                updateDate(date)
+                selectDate(date)
             }
         },
     )
@@ -34,20 +37,20 @@ class CalendarViewModel @Inject constructor(
     fun onNextMonth() {
         intent {
             val date = state.date ?: return@intent
-            updateDate(date.plusMonths(1))
+            selectDate(date.plusMonths(1))
         }
     }
 
     fun onPreviousMonth() {
         intent {
             val date = state.date ?: return@intent
-            updateDate(date.minusMonths(1))
+            selectDate(date.minusMonths(1))
         }
     }
 
     fun onGoToDate(date: LocalDate) {
         intent {
-            updateDate(date)
+            selectDate(date)
         }
     }
 
@@ -59,9 +62,14 @@ class CalendarViewModel @Inject constructor(
     }
 
     context(SimpleSyntax<State, SideEffect>)
-    private suspend fun updateDate(date: LocalDate) {
-        val newMonthData = if (state.monthDays?.any { it.date == date } != true) {
+    private suspend fun selectDate(date: LocalDate) {
+        val newMonthDays = if (state.monthDays?.any { it.date == date } != true) {
             getMonthDays(date)
+        } else {
+            null
+        }
+        val events = if (newMonthDays != null) {
+            getEventsForMonth(newMonthDays)
         } else {
             null
         }
@@ -69,7 +77,8 @@ class CalendarViewModel @Inject constructor(
         reduce {
             state.copy(
                 date = date,
-                monthDays = newMonthData ?: state.monthDays,
+                monthDays = newMonthDays ?: state.monthDays,
+                events = events ?: state.events,
             )
         }
     }
@@ -77,6 +86,7 @@ class CalendarViewModel @Inject constructor(
     data class State(
         val date: LocalDate? = null,
         val monthDays: MonthDays? = null,
+        val events: Map<LocalDate, DateEvents> = emptyMap(),
     )
 
     sealed interface SideEffect {

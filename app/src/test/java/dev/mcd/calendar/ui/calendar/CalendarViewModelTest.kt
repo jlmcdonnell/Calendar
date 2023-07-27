@@ -1,7 +1,10 @@
 package dev.mcd.calendar.ui.calendar
 
-import app.cash.turbine.test
 import dev.mcd.calendar.feature.calendar.domain.GetMonthData
+import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
+import dev.mcd.calendar.test.viewmodel.testSideEffect
+import dev.mcd.calendar.test.viewmodel.testState
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -14,30 +17,35 @@ class CalendarViewModelTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val testDate = LocalDate.of(2023, 7, 25)
+
     val viewModel = CalendarViewModel(
         dateProvider = { testDate },
         getMonthData = GetMonthData(),
     )
 
-    Given("The ViewModel is initialized") {
-        viewModel.container.stateFlow.test {
-            And("The container is created") {
-                val initialState = awaitItem()
-
-                Then("Emit default state on initialization") {
-                    initialState shouldBe CalendarViewModel.State()
+    with(viewModel) {
+        Given("The ViewModel is initialized") {
+            Then("Emit default state on initialization") {
+                testState(consumeInitialState = false) {
+                    awaitItem() shouldBe CalendarViewModel.State()
                     cancelAndConsumeRemainingEvents()
                 }
+            }
 
-                Then("Emit the current date") {
+            Then("Emit the current date") {
+                testState {
                     awaitItem().date shouldBe testDate
                 }
+            }
 
-                Then("MonthData is generated") {
+            Then("MonthData is generated") {
+                testState {
                     awaitItem().data!!.shouldNotBeNull()
                 }
+            }
 
-                When("Next month is pressed") {
+            When("Next month is pressed") {
+                testState {
                     val currentState = awaitItem()
                     viewModel.onNextMonth()
 
@@ -50,7 +58,9 @@ class CalendarViewModelTest : BehaviorSpec({
                         state.data shouldNotBe currentState.data
                     }
                 }
-                When("Previous month is pressed") {
+            }
+            When("Previous month is pressed") {
+                testState {
                     val currentState = awaitItem()
                     viewModel.onPreviousMonth()
 
@@ -63,8 +73,12 @@ class CalendarViewModelTest : BehaviorSpec({
                         state.data shouldNotBe currentState.data
                     }
                 }
-                When("The date is changed to a new date") {
+            }
+
+            When("The date is changed") {
+                testState {
                     val currentState = awaitItem()
+
                     And("That date is outside of the current month view") {
                         val newDate = testDate.plusMonths(1)
                         viewModel.onGoToDate(newDate)
@@ -93,6 +107,25 @@ class CalendarViewModelTest : BehaviorSpec({
                     }
                 }
             }
+
+            When("A day is clicked") {
+                testSideEffect {
+                    viewModel.onDateClicked(testDate)
+
+                    And("There are no events") {
+                        Then("Navigate to Create Event with given date") {
+                            awaitItem() shouldBe SideEffect.NavigateCreateEvent(testDate)
+                        }
+                    }
+                }
+            }
         }
     }
 })
+
+context(CalendarViewModel)
+private fun calendarDate(
+    date: LocalDate,
+): CalendarDate {
+    return container.stateFlow.value.data!!.days.first { it.date == date }
+}

@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mcd.calendar.feature.calendar.domain.GetMonthData
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthData
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.SideEffect
+import dev.mcd.calendar.ui.calendar.CalendarViewModel.State
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
@@ -16,9 +19,9 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(
     private val dateProvider: () -> LocalDate,
     private val getMonthData: GetMonthData,
-) : ViewModel(), ContainerHost<CalendarViewModel.State, Unit> {
+) : ViewModel(), ContainerHost<State, SideEffect> {
 
-    override val container = container<State, Unit>(
+    override val container = container<State, SideEffect>(
         initialState = State(),
         onCreate = {
             intent {
@@ -48,7 +51,16 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    context(SimpleSyntax<State, Unit>)
+    fun onDateClicked(date: LocalDate) {
+        intent {
+            val calendarDate = state.data?.days?.firstOrNull { it.date == date } ?: return@intent
+            if (calendarDate.eventCount == 0) {
+                postSideEffect(SideEffect.NavigateCreateEvent(date))
+            }
+        }
+    }
+
+    context(SimpleSyntax<State, SideEffect>)
     private suspend fun updateDate(date: LocalDate) {
         val newMonthData = if (state.data?.days?.any { it.date == date } != true) {
             getMonthData(date)
@@ -68,4 +80,10 @@ class CalendarViewModel @Inject constructor(
         val date: LocalDate? = null,
         val data: MonthData? = null,
     )
+
+    sealed interface SideEffect {
+        data class NavigateCreateEvent(
+            val date: LocalDate,
+        ) : SideEffect
+    }
 }

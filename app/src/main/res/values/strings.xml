@@ -4,4 +4,7 @@
     <!-- Calendar Screen -->
     <string name="calendar_next_month">Next Month</string>
     <string name="calendar_previous_month">Previous Month</string>
+
+    <!-- Create Event Screen -->
+    <string name="create_event_title">New Event</string>
 </resources>

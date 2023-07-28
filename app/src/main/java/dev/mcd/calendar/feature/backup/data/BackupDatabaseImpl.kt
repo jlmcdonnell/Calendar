@@ -29,7 +29,6 @@ class BackupDatabaseImpl @Inject constructor(
         withContext(dispatcher) {
             ZipOutputStream(backupFile.outputStream()).use { out ->
                 databaseFolder.listFiles()?.forEach { file ->
-                    println("Zip: ${file.name} (${file.inputStream().available() / 1000.0} KB)")
                     out.putNextEntry(ZipEntry(file.name))
                     out.write(file.readBytes())
                     out.closeEntry()

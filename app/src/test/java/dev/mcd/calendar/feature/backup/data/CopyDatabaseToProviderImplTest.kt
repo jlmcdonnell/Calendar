@@ -12,7 +12,7 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.util.zip.ZipFile
 
-class BackupDatabaseImplTest {
+class CopyDatabaseToProviderImplTest {
 
     private lateinit var tempDir: TemporaryFolder
 
@@ -44,7 +44,7 @@ class BackupDatabaseImplTest {
             }
         }
 
-        BackupDatabaseImpl(
+        CopyDatabaseToProviderImpl(
             backupFile = backupFile,
             databaseFolder = databaseFolder,
             dispatcher = Dispatchers.Unconfined,

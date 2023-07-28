@@ -2,10 +2,16 @@
     <string name="app_name">Calendar</string>
 
     <string name="back">Back</string>
+    <string name="backup_intent_title">Backup Calendar</string>
+
+    <!-- Backup Dialog -->
+    <string name="backup_title">Backup Calendar</string>
+    <string name="backup">Backup</string>
 
     <!-- Calendar Screen -->
     <string name="calendar_next_month">Next Month</string>
     <string name="calendar_previous_month">Previous Month</string>
+    <string name="calendar_backup">Backup Calendar</string>
 
     <!-- Create Event Screen -->
     <string name="create_event_title">New Event</string>

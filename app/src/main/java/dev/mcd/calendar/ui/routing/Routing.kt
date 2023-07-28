@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
+import dev.mcd.calendar.ui.backup.BackupCalendarDialog
 import dev.mcd.calendar.ui.calendar.day.DayEventsScreen
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthScreen
 import dev.mcd.calendar.ui.events.create.CreateEventScreen
@@ -22,6 +24,9 @@ fun Routing(navController: NavHostController) {
                 },
                 onNavigateDay = { date ->
                     navController.navigate("/calendar/day?date=${date.navArg()}")
+                },
+                onNavigateBackup = {
+                    navController.navigate("/backup")
                 },
             )
         }
@@ -47,6 +52,11 @@ fun Routing(navController: NavHostController) {
                     navController.popBackStack()
                 },
             )
+        }
+        dialog("/backup") {
+            BackupCalendarDialog {
+                navController.popBackStack()
+            }
         }
     }
 }

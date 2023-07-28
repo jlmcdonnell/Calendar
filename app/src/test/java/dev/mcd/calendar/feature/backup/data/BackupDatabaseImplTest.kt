@@ -35,6 +35,7 @@ class BackupDatabaseImplTest {
         val testFolder = tempDir.newFolder()
         val databaseFolder = File(testFolder, "database").apply { mkdir() }
         val backupFolder = File(testFolder, "backup").apply { mkdir() }
+        val backupFile = File(backupFolder, "backup.zip")
 
         val dbFiles = 0.until(2).map {
             File(databaseFolder, "file$it").also { file ->
@@ -44,14 +45,12 @@ class BackupDatabaseImplTest {
         }
 
         BackupDatabaseImpl(
-            backupFolder = backupFolder,
-            backupFileName = "backup.zip",
+            backupFile = backupFile,
             databaseFolder = databaseFolder,
             dispatcher = Dispatchers.Unconfined,
         ).invoke()
 
-        val zipFile = backupFolder.listFiles()!!.first()
-        ZipFile(zipFile).use { zip ->
+        ZipFile(backupFile).use { zip ->
             val entries = zip.entries().toList()
             entries.size shouldBe 2
             entries.forEachIndexed { i, entry ->

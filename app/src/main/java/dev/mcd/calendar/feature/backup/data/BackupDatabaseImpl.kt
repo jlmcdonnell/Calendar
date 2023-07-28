@@ -2,7 +2,7 @@
 
 package dev.mcd.calendar.feature.backup.data
 
-import dev.mcd.calendar.feature.backup.di.BackupFolder
+import dev.mcd.calendar.feature.backup.di.BackupFile
 import dev.mcd.calendar.feature.backup.domain.BackupDatabase
 import dev.mcd.calendar.feature.calendar.data.di.CalendarDBFolder
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,19 +13,23 @@ import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
 class BackupDatabaseImpl @Inject constructor(
-    @BackupFolder
-    private val backupFolder: File,
-    private val backupFileName: String,
+    @BackupFile
+    private val backupFile: File,
     @CalendarDBFolder
     private val databaseFolder: File,
     private val dispatcher: CoroutineDispatcher,
 ) : BackupDatabase {
 
     override suspend fun invoke() {
+        if (backupFile.exists()) {
+            backupFile.delete()
+        }
+        backupFile.createNewFile()
+
         withContext(dispatcher) {
-            val backupFile = File(backupFolder, backupFileName)
             ZipOutputStream(backupFile.outputStream()).use { out ->
                 databaseFolder.listFiles()?.forEach { file ->
+                    println("Zip: ${file.name} (${file.inputStream().available() / 1000.0} KB)")
                     out.putNextEntry(ZipEntry(file.name))
                     out.write(file.readBytes())
                     out.closeEntry()

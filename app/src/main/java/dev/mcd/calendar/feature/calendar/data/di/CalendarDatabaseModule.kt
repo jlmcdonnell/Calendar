@@ -22,10 +22,11 @@ class CalendarDatabaseModule {
     fun provideCalendarDBName() = DATABASE_NAME
 
     @Provides
+    @Singleton
     @CalendarDBFolder
     fun provideCalendarDBFolder(
         @ApplicationContext context: Context,
-    ): File = File(context.filesDir, "databases")
+    ): File = File(context.dataDir, "databases")
 
     @Provides
     @Singleton

@@ -11,26 +11,29 @@ import dev.mcd.calendar.feature.backup.domain.BackupDatabase
 import dev.mcd.calendar.feature.calendar.data.di.CalendarDBFolder
 import kotlinx.coroutines.Dispatchers
 import java.io.File
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class BackupModule {
 
     @Provides
-    @BackupFolder
-    fun backupFolder(
+    @Singleton
+    @BackupFile
+    fun backupFile(
         @ApplicationContext context: Context,
     ): File {
-        return File(context.filesDir, BACKUP_DIR)
+        val folder = File(context.filesDir, BACKUP_DIR)
+        folder.mkdirs()
+        return File(folder, BACKUP_FILE_NAME)
     }
 
     @Provides
     fun backupDatabase(
-        @BackupFolder backupFolder: File,
+        @BackupFile backupFile: File,
         @CalendarDBFolder databaseFolder: File,
     ): BackupDatabase = BackupDatabaseImpl(
-        backupFolder = backupFolder,
-        backupFileName = BACKUP_FILE_NAME,
+        backupFile = backupFile,
         databaseFolder = databaseFolder,
         dispatcher = Dispatchers.IO,
     )

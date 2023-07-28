@@ -75,6 +75,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+    implementation("androidx.documentfile:documentfile:1.0.1")
 
     // Compose BOM
     implementation(platform("androidx.compose:compose-bom:2023.06.01"))
@@ -104,6 +105,9 @@ dependencies {
     ksp("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     testImplementation("androidx.room:room-testing:2.5.2")
+
+    // Data Store
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Other
     implementation("com.jakewharton.timber:timber:5.0.1")

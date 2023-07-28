@@ -12,6 +12,8 @@ import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result.NoBackupUri
 import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result.Success
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.CopyDatabaseToProvider
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class BackupDatabaseImpl(
@@ -20,23 +22,26 @@ class BackupDatabaseImpl(
     private val copyDatabaseToProvider: CopyDatabaseToProvider,
     @BackupFile
     private val backupFile: File,
+    private val dispatcher: CoroutineDispatcher,
 ) : BackupDatabase {
 
     override suspend fun invoke(): Result {
-        val uriString = backupStore.backupDirectoryUri() ?: return NoBackupUri
-        val uri = Uri.parse(uriString)
+        return withContext(dispatcher) {
+            val uriString = backupStore.backupDirectoryUri() ?: return@withContext NoBackupUri
+            val uri = Uri.parse(uriString)
 
-        copyDatabaseToProvider()
+            copyDatabaseToProvider()
 
-        takePermission(uri)
+            takePermission(uri)
 
-        val backupFolder = DocumentFile.fromTreeUri(context, uri) ?: return DocumentCreateError
-        val userBackupFile = findOrCreateFile(backupFolder)
-        check(userBackupFile != null) { return DocumentCreateError }
+            val backupFolder = DocumentFile.fromTreeUri(context, uri) ?: return@withContext DocumentCreateError
+            val userBackupFile = findOrCreateFile(backupFolder)
+            check(userBackupFile != null) { return@withContext DocumentCreateError }
 
-        copy(userBackupFile.uri)
+            copy(userBackupFile.uri)
 
-        return Success
+            Success
+        }
     }
 
     private fun findOrCreateFile(folder: DocumentFile): DocumentFile? {

@@ -61,6 +61,7 @@ class BackupModule {
         backupStore = backupStore,
         backupFile = backupFile,
         copyDatabaseToProvider = copyDatabaseToProvider,
+        dispatcher = Dispatchers.IO,
     )
 
     private companion object {

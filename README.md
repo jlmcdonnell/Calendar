@@ -1,11 +1,12 @@
 ## Calendar app implemented with Jetpack Compose
 
-Allows managing of events and backup to a user directory
+Allows managing of events and backup to a user directory (I use this personally with a [Syncthing](https://syncthing.net/) folder)
 
 ### Not yet implemented
 
 - Notifications
 - Import
+- Repeatable events
 
 ### Screenshots
 

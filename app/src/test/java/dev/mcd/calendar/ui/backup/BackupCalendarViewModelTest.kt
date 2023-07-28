@@ -154,4 +154,30 @@ class BackupCalendarViewModelTest {
             awaitSideEffect() shouldBe ChooseBackupLocation
         }
     }
+
+    @Test
+    fun `When backup location chosen, Then emit showBackup=true`() = runTest {
+        val backupDatabase = mockk<BackupDatabase>()
+        val backupStore = mockk<BackupStore>(relaxed = true) {
+            coEvery { backupDirectoryUri() } returns null
+        }
+
+        val vm = BackupCalendarViewModel(
+            backupDatabase = backupDatabase,
+            backupStore = backupStore,
+        )
+
+        vm.test(this) {
+            runOnCreate()
+            expectInitialState()
+
+            vm.onBackupUriChosen("uri")
+
+            awaitState().showBackup shouldBe true
+        }
+
+        coVerify {
+            backupStore.setBackupDirectoryUri("uri")
+        }
+    }
 }

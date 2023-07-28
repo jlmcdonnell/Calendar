@@ -1,6 +1,5 @@
 package dev.mcd.calendar.ui.backup
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mcd.calendar.feature.backup.domain.BackupDatabase
@@ -61,9 +60,12 @@ class BackupCalendarViewModel @Inject constructor(
         }
     }
 
-    fun onBackupUriChosen(uri: Uri) {
+    fun onBackupUriChosen(uri: String) {
         intent {
-            backupStore.setBackupDirectoryUri(uri.toString())
+            backupStore.setBackupDirectoryUri(uri)
+            reduce {
+                state.copy(showBackup = true)
+            }
         }
     }
 

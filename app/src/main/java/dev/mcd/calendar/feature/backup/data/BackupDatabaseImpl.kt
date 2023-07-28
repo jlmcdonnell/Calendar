@@ -1,6 +1,7 @@
 package dev.mcd.calendar.feature.backup.data
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import dev.mcd.calendar.feature.backup.di.BackupFile
@@ -27,15 +28,29 @@ class BackupDatabaseImpl(
 
         copyDatabaseToProvider()
 
-        val backupFolder = DocumentFile.fromTreeUri(context, uri) ?: return DocumentCreateError
-        val userBackupFile = backupFolder.findFile(backupFile.name) ?: backupFolder.createFile("application/zip", backupFile.name)
+        takePermission(uri)
 
+        val backupFolder = DocumentFile.fromTreeUri(context, uri) ?: return DocumentCreateError
+        val userBackupFile = findOrCreateFile(backupFolder)
         check(userBackupFile != null) { return DocumentCreateError }
 
-        context.contentResolver.openOutputStream(userBackupFile.uri)?.use {
-            backupFile.inputStream().copyTo(it)
-        } ?: throw Exception("Unable to open output stream")
+        copy(userBackupFile.uri)
 
         return Success
+    }
+
+    private fun findOrCreateFile(folder: DocumentFile): DocumentFile? {
+        return folder.findFile(backupFile.name) ?: folder.createFile("application/zip", backupFile.name)
+    }
+
+    private fun copy(uri: Uri) {
+        context.contentResolver.openOutputStream(uri)?.use {
+            backupFile.inputStream().copyTo(it)
+        } ?: throw Exception("Unable to open output stream")
+    }
+
+    private fun takePermission(uri: Uri) {
+        val modeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        context.contentResolver.takePersistableUriPermission(uri, modeFlags)
     }
 }

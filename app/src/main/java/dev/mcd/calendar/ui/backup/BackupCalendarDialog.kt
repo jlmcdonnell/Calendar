@@ -39,7 +39,7 @@ fun BackupCalendarDialog(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
         onResult = { uri ->
-            uri?.let { viewModel.onBackupUriChosen(uri) }
+            uri?.let { viewModel.onBackupUriChosen(uri.toString()) }
         },
     )
 

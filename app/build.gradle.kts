@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.mcd.calendar"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"

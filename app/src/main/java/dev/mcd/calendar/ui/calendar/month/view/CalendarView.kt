@@ -28,7 +28,6 @@ import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.month.view.modifier.CalendarLayout
-import dev.mcd.calendar.ui.calendar.month.view.modifier.CalendarViewIndices
 import dev.mcd.calendar.ui.calendar.month.view.modifier.calendarCellPadding
 import dev.mcd.calendar.ui.calendar.month.view.modifier.calendarLayout
 import dev.mcd.calendar.ui.theme.LocalAppColors
@@ -64,16 +63,14 @@ fun CalendarView(
         ) {
             calendarLayout?.run {
                 monthDays.forEachIndexed { i, date ->
-                    CalendarViewIndices.run {
-                        CalendarCell(
-                            index = i,
-                            date = date,
-                            onCellClicked = onCellClicked,
-                            renderCell = {
-                                renderCell(date)
-                            },
-                        )
-                    }
+                    CalendarCell(
+                        index = i,
+                        date = date,
+                        onCellClicked = onCellClicked,
+                        renderCell = {
+                            renderCell(date)
+                        },
+                    )
                 }
             }
         }
@@ -100,7 +97,7 @@ fun WeekDays(modifier: Modifier = Modifier) {
     }
 }
 
-context(CalendarLayout, CalendarViewIndices)
+context(CalendarLayout)
 @Composable
 fun CalendarCell(
     index: Int,

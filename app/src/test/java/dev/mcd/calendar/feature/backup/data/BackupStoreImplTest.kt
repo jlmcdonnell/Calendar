@@ -13,24 +13,24 @@ class BackupStoreImplTest {
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
-    fun `Get null backup URI`() = runTest {
-        BackupStoreImpl(context).backupDirectoryUri() shouldBe null
+    fun `Get null export URI`() = runTest {
+        BackupStoreImpl(context).exportDirectoryUri() shouldBe null
     }
 
     @Test
-    fun `Set backup URI`() = runTest {
+    fun `Set export URI`() = runTest {
         with(BackupStoreImpl(context)) {
-            setBackupDirectoryUri("uri")
-            backupDirectoryUri() shouldBe "uri"
+            setExportDirectoryUri("uri")
+            exportDirectoryUri() shouldBe "uri"
         }
     }
 
     @Test
-    fun `Clear backup URI`() = runTest {
+    fun `Clear export URI`() = runTest {
         with(BackupStoreImpl(context)) {
-            setBackupDirectoryUri("uri")
-            setBackupDirectoryUri(null)
-            backupDirectoryUri() shouldBe null
+            setExportDirectoryUri("uri")
+            setExportDirectoryUri(null)
+            exportDirectoryUri() shouldBe null
         }
     }
 }

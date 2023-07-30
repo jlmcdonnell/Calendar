@@ -6,12 +6,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.mcd.calendar.feature.backup.data.BackupDatabaseImpl
 import dev.mcd.calendar.feature.backup.data.BackupStoreImpl
 import dev.mcd.calendar.feature.backup.data.CopyDatabaseToProviderImpl
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase
+import dev.mcd.calendar.feature.backup.data.ExportDatabaseImpl
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.CopyDatabaseToProvider
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase
 import dev.mcd.calendar.feature.calendar.data.di.CalendarDBFolder
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -31,21 +31,21 @@ class BackupModule {
 
     @Provides
     @Singleton
-    @BackupFile
-    fun backupFile(
+    @ExportFile
+    fun exportFile(
         @ApplicationContext context: Context,
     ): File {
-        val folder = File(context.filesDir, BACKUP_DIR)
+        val folder = File(context.filesDir, EXPORT_DIR)
         folder.mkdirs()
-        return File(folder, BACKUP_FILE_NAME)
+        return File(folder, EXPORT_FILE_NAME)
     }
 
     @Provides
     fun copyDatabaseToProvider(
-        @BackupFile backupFile: File,
+        @ExportFile exportFile: File,
         @CalendarDBFolder databaseFolder: File,
     ): CopyDatabaseToProvider = CopyDatabaseToProviderImpl(
-        backupFile = backupFile,
+        exportFile = exportFile,
         databaseFolder = databaseFolder,
         dispatcher = Dispatchers.IO,
     )
@@ -53,19 +53,19 @@ class BackupModule {
     @Provides
     fun backupDatabase(
         @ApplicationContext context: Context,
-        @BackupFile backupFile: File,
+        @ExportFile exportFile: File,
         backupStore: BackupStore,
         copyDatabaseToProvider: CopyDatabaseToProvider,
-    ): BackupDatabase = BackupDatabaseImpl(
+    ): ExportDatabase = ExportDatabaseImpl(
         context = context,
         backupStore = backupStore,
-        backupFile = backupFile,
+        exportFile = exportFile,
         copyDatabaseToProvider = copyDatabaseToProvider,
         dispatcher = Dispatchers.IO,
     )
 
     private companion object {
-        const val BACKUP_DIR = "backup"
-        const val BACKUP_FILE_NAME = "calendar_backup.zip"
+        const val EXPORT_DIR = "export"
+        const val EXPORT_FILE_NAME = "calendar_backup.zip"
     }
 }

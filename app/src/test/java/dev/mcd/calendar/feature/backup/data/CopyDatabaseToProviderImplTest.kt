@@ -31,11 +31,11 @@ class CopyDatabaseToProviderImplTest {
     }
 
     @Test
-    fun `Copy database files to backup folder`() = runTest {
+    fun `Copy database files to export folder`() = runTest {
         val testFolder = tempDir.newFolder()
         val databaseFolder = File(testFolder, "database").apply { mkdir() }
-        val backupFolder = File(testFolder, "backup").apply { mkdir() }
-        val backupFile = File(backupFolder, "backup.zip")
+        val exportFolder = File(testFolder, "export").apply { mkdir() }
+        val exportFile = File(exportFolder, "export.zip")
 
         val dbFiles = 0.until(2).map {
             File(databaseFolder, "file$it").also { file ->
@@ -45,12 +45,12 @@ class CopyDatabaseToProviderImplTest {
         }
 
         CopyDatabaseToProviderImpl(
-            backupFile = backupFile,
+            exportFile = exportFile,
             databaseFolder = databaseFolder,
             dispatcher = Dispatchers.Unconfined,
         ).invoke()
 
-        ZipFile(backupFile).use { zip ->
+        ZipFile(exportFile).use { zip ->
             val entries = zip.entries().toList()
             entries.size shouldBe 2
             entries.forEachIndexed { i, entry ->

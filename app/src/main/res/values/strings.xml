@@ -2,17 +2,17 @@
     <string name="app_name">Calendar</string>
 
     <string name="back">Back</string>
-    <string name="backup_intent_title">Backup Calendar</string>
 
     <!-- Backup Dialog -->
-    <string name="backup_title">Backup Calendar</string>
-    <string name="backup">Backup</string>
-    <string name="backup_choose_location">Set Location</string>
+    <string name="export_dialog_title">Export Calendar</string>
+    <string name="export_dialog_export">Export</string>
+    <string name="export_dialog_choose_location">Set Location</string>
 
     <!-- Calendar Screen -->
     <string name="calendar_next_month">Next Month</string>
     <string name="calendar_previous_month">Previous Month</string>
-    <string name="calendar_backup">Backup Calendar</string>
+    <string name="calendar_export">Export Calendar</string>
+    <string name="calendar_import">Import Calendar</string>
 
     <!-- Create Event Screen -->
     <string name="create_event_title">New Event</string>

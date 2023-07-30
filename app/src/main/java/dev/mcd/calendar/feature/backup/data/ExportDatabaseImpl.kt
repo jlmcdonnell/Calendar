@@ -4,30 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import dev.mcd.calendar.feature.backup.di.BackupFile
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result.DocumentCreateError
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result.NoBackupUri
-import dev.mcd.calendar.feature.backup.domain.BackupDatabase.Result.Success
+import dev.mcd.calendar.feature.backup.di.ExportFile
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.CopyDatabaseToProvider
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result.DocumentCreateError
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result.NoExportUri
+import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result.Success
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class BackupDatabaseImpl(
+class ExportDatabaseImpl(
     private val context: Context,
     private val backupStore: BackupStore,
     private val copyDatabaseToProvider: CopyDatabaseToProvider,
-    @BackupFile
-    private val backupFile: File,
+    @ExportFile
+    private val exportFile: File,
     private val dispatcher: CoroutineDispatcher,
-) : BackupDatabase {
+) : ExportDatabase {
 
     override suspend fun invoke(): Result {
         return withContext(dispatcher) {
-            val uriString = backupStore.backupDirectoryUri() ?: return@withContext NoBackupUri
+            val uriString = backupStore.exportDirectoryUri() ?: return@withContext NoExportUri
             val uri = Uri.parse(uriString)
 
             copyDatabaseToProvider()
@@ -45,12 +45,12 @@ class BackupDatabaseImpl(
     }
 
     private fun findOrCreateFile(folder: DocumentFile): DocumentFile? {
-        return folder.findFile(backupFile.name) ?: folder.createFile("application/zip", backupFile.name)
+        return folder.findFile(exportFile.name) ?: folder.createFile("application/zip", exportFile.name)
     }
 
     private fun copy(uri: Uri) {
         context.contentResolver.openOutputStream(uri)?.use {
-            backupFile.inputStream().copyTo(it)
+            exportFile.inputStream().copyTo(it)
         } ?: throw Exception("Unable to open output stream")
     }
 

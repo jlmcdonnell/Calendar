@@ -14,11 +14,11 @@ class BackupStoreImpl(context: Context) : BackupStore {
     private val store = context.dataStore
     private val backupDirKey = stringPreferencesKey("backup-dir")
 
-    override suspend fun backupDirectoryUri(): String? {
+    override suspend fun exportDirectoryUri(): String? {
         return store.data.first()[backupDirKey].takeIf { !it.isNullOrBlank() }
     }
 
-    override suspend fun setBackupDirectoryUri(uri: String?) {
+    override suspend fun setExportDirectoryUri(uri: String?) {
         store.edit {
             if (uri == null) {
                 it.remove(backupDirKey)

@@ -1,10 +1,10 @@
 package dev.mcd.calendar.feature.backup.domain
 
-interface BackupDatabase {
+interface ExportDatabase {
 
     sealed interface Result {
         data object Success : Result
-        data object NoBackupUri : Result
+        data object NoExportUri : Result
         data object DocumentCreateError : Result
     }
 

@@ -6,21 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Backup
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,20 +23,19 @@ import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateCreateEvent
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateToDay
+import dev.mcd.calendar.ui.calendar.month.view.CalendarMonthTopBar
 import dev.mcd.calendar.ui.calendar.month.view.CalendarView
 import dev.mcd.calendar.ui.calendar.month.view.EventCountText
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 @Composable
 fun CalendarMonthScreen(
     viewModel: CalendarMonthViewModel = hiltViewModel(),
     onNavigateCreateEvent: (LocalDate) -> Unit,
     onNavigateDay: (LocalDate) -> Unit,
-    onNavigateBackup: () -> Unit,
+    onNavigateExport: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
@@ -57,34 +49,9 @@ fun CalendarMonthScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    state.date?.run {
-                        Row {
-                            val monthText = month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-                            Text(
-                                modifier = Modifier.alpha(.65f),
-                                text = "$year / ",
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                            Text(text = monthText)
-                        }
-                    } ?: run {
-                        Text(text = stringResource(id = R.string.app_name))
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            onNavigateBackup()
-                        },
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(image = Icons.Rounded.Backup),
-                            contentDescription = stringResource(id = R.string.calendar_backup),
-                        )
-                    }
-                },
+            CalendarMonthTopBar(
+                date = state.date,
+                onBackupClicked = onNavigateExport,
             )
         },
     ) {

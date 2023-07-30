@@ -22,15 +22,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
-import dev.mcd.calendar.ui.backup.BackupCalendarViewModel.SideEffect.BackupError
-import dev.mcd.calendar.ui.backup.BackupCalendarViewModel.SideEffect.ChooseBackupLocation
-import dev.mcd.calendar.ui.backup.BackupCalendarViewModel.SideEffect.Dismiss
+import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.ChooseExportLocation
+import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.Dismiss
+import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.ExportError
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun BackupCalendarDialog(
-    viewModel: BackupCalendarViewModel = hiltViewModel(),
+fun ExportCalendarDialog(
+    viewModel: ExportCalendarViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -39,16 +39,16 @@ fun BackupCalendarDialog(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
         onResult = { uri ->
-            uri?.let { viewModel.onBackupUriChosen(uri.toString()) }
+            uri?.let { viewModel.onExportUriChosen(uri.toString()) }
         },
     )
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            is ChooseBackupLocation -> {
+            is ChooseExportLocation -> {
                 launcher.launch(null)
             }
-            is BackupError -> {
+            is ExportError -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
             is Dismiss -> {
@@ -57,20 +57,20 @@ fun BackupCalendarDialog(
         }
     }
 
-    BackupDialog(
-        showBackup = state.showBackup,
+    ExportDialog(
+        showExport = state.showExport,
         onDismiss = onDismiss,
-        onBackup = { viewModel.onBackup() },
-        onChooseBackupLocation = { viewModel.onChooseBackupLocation() },
+        onExport = { viewModel.onExport() },
+        onChooseExportLocation = { viewModel.onChooseExportLocation() },
     )
 }
 
 @Composable
-private fun BackupDialog(
-    showBackup: Boolean,
+private fun ExportDialog(
+    showExport: Boolean,
     onDismiss: () -> Unit,
-    onBackup: () -> Unit,
-    onChooseBackupLocation: () -> Unit,
+    onExport: () -> Unit,
+    onChooseExportLocation: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onDismiss() }) {
         Card {
@@ -81,22 +81,22 @@ private fun BackupDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(id = R.string.backup_title),
+                    text = stringResource(id = R.string.export_dialog_title),
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                if (showBackup) {
+                if (showExport) {
                     OutlinedButton(
-                        onClick = { onBackup() },
+                        onClick = { onExport() },
                     ) {
-                        Text(text = stringResource(id = R.string.backup))
+                        Text(text = stringResource(id = R.string.export_dialog_export))
                     }
                 } else {
                     OutlinedButton(
-                        onClick = { onChooseBackupLocation() },
+                        onClick = { onChooseExportLocation() },
                     ) {
-                        Text(text = stringResource(id = R.string.backup_choose_location))
+                        Text(text = stringResource(id = R.string.export_dialog_choose_location))
                     }
                 }
             }

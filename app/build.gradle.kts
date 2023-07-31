@@ -38,11 +38,11 @@ android {
     }
     kotlinOptions {
         freeCompilerArgs += "-Xcontext-receivers"
-        freeCompilerArgs += "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
-        freeCompilerArgs += "-Xopt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi"
-        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
-        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
+        freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
+        freeCompilerArgs += "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi"
+        freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs += "-opt-in=kotlin.ExperimentalStdlibApi"
+        freeCompilerArgs += "-opt-in=kotlin.contracts.ExperimentalContracts"
     }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")

@@ -1,14 +1,14 @@
-package dev.mcd.calendar.ui.backup
+package dev.mcd.calendar.ui.backup.exportcalendar
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.ExportDatabase
 import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.ChooseExportLocation
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.Dismiss
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.State
+import dev.mcd.calendar.ui.backup.exportcalendar.ExportCalendarViewModel.SideEffect
+import dev.mcd.calendar.ui.backup.exportcalendar.ExportCalendarViewModel.SideEffect.ChooseExportLocation
+import dev.mcd.calendar.ui.backup.exportcalendar.ExportCalendarViewModel.SideEffect.Dismiss
+import dev.mcd.calendar.ui.backup.exportcalendar.ExportCalendarViewModel.State
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -17,6 +17,11 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
+
+@HiltViewModel
+class TestVM @Inject constructor(
+    val backupStore: BackupStore,
+) : ViewModel()
 
 @HiltViewModel
 class ExportCalendarViewModel @Inject constructor(

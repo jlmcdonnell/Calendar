@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
+import dev.mcd.calendar.feature.backup.di.BackupFileMimeType
 import dev.mcd.calendar.feature.backup.di.ExportFile
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.CopyDatabaseToProvider
@@ -22,6 +23,8 @@ class ExportDatabaseImpl(
     private val copyDatabaseToProvider: CopyDatabaseToProvider,
     @ExportFile
     private val exportFile: File,
+    @BackupFileMimeType
+    private val backupFileMimeType: String,
     private val dispatcher: CoroutineDispatcher,
 ) : ExportDatabase {
 
@@ -45,7 +48,7 @@ class ExportDatabaseImpl(
     }
 
     private fun findOrCreateFile(folder: DocumentFile): DocumentFile? {
-        return folder.findFile(exportFile.name) ?: folder.createFile("application/zip", exportFile.name)
+        return folder.findFile(exportFile.name) ?: folder.createFile(backupFileMimeType, exportFile.name)
     }
 
     private fun copy(uri: Uri) {

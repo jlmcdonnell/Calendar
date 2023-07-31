@@ -36,6 +36,7 @@ fun CalendarMonthScreen(
     onNavigateCreateEvent: (LocalDate) -> Unit,
     onNavigateDay: (LocalDate) -> Unit,
     onNavigateExport: () -> Unit,
+    onNavigateImport: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
@@ -51,7 +52,8 @@ fun CalendarMonthScreen(
         topBar = {
             CalendarMonthTopBar(
                 date = state.date,
-                onBackupClicked = onNavigateExport,
+                onImportClicked = onNavigateImport,
+                onExportClicked = onNavigateExport,
             )
         },
     ) {

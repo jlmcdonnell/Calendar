@@ -6,7 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import dev.mcd.calendar.ui.backup.ExportCalendarDialog
+import dev.mcd.calendar.ui.backup.exportcalendar.ExportCalendarDialog
+import dev.mcd.calendar.ui.backup.importcalendar.ImportCalendarDialog
 import dev.mcd.calendar.ui.calendar.day.DayEventsScreen
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthScreen
 import dev.mcd.calendar.ui.events.create.CreateEventScreen
@@ -27,6 +28,9 @@ fun Routing(navController: NavHostController) {
                 },
                 onNavigateExport = {
                     navController.navigate("/export")
+                },
+                onNavigateImport = {
+                    navController.navigate("/import")
                 },
             )
         }
@@ -52,6 +56,11 @@ fun Routing(navController: NavHostController) {
                     navController.popBackStack()
                 },
             )
+        }
+        dialog("/import") {
+            ImportCalendarDialog {
+                navController.popBackStack()
+            }
         }
         dialog("/export") {
             ExportCalendarDialog {

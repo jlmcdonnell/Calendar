@@ -1,12 +1,7 @@
-package dev.mcd.calendar.ui.backup
+package dev.mcd.calendar.ui.backup.exportcalendar
 
 import dev.mcd.calendar.feature.backup.domain.BackupStore
 import dev.mcd.calendar.feature.backup.domain.ExportDatabase
-import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result.DocumentCreateError
-import dev.mcd.calendar.feature.backup.domain.ExportDatabase.Result.Success
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.ChooseExportLocation
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.Dismiss
-import dev.mcd.calendar.ui.backup.ExportCalendarViewModel.SideEffect.ExportError
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -17,7 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.orbitmvi.orbit.test.test
 
-class BackupCalendarViewModelTest {
+class ExportCalendarViewModelTest {
 
     @Test
     fun `Given export URI exists, Then show export button`() = runTest {
@@ -59,7 +54,7 @@ class BackupCalendarViewModelTest {
     @Test
     fun `When export is clicked, Then invoke BackupDatabase`() = runTest {
         val exportDatabase = mockk<ExportDatabase> {
-            coEvery { this@mockk.invoke() } returns Success
+            coEvery { this@mockk.invoke() } returns ExportDatabase.Result.Success
         }
         val backupStore = mockk<BackupStore> {
             coEvery { exportDirectoryUri() } returns "uri"
@@ -76,7 +71,7 @@ class BackupCalendarViewModelTest {
 
             awaitState()
             vm.onExport()
-            awaitSideEffect() shouldBe Dismiss
+            awaitSideEffect() shouldBe ExportCalendarViewModel.SideEffect.Dismiss
         }
         coVerify { exportDatabase.invoke() }
     }
@@ -102,14 +97,14 @@ class BackupCalendarViewModelTest {
 
             awaitState()
             vm.onExport()
-            awaitSideEffect() shouldBe ExportError(message)
+            awaitSideEffect() shouldBe ExportCalendarViewModel.SideEffect.ExportError(message)
         }
     }
 
     @Test
     fun `When BackupDatabase returns DocumentCreateError, Then delete export URI`() = runTest {
         val exportDatabase = mockk<ExportDatabase> {
-            coEvery { this@mockk.invoke() } returns DocumentCreateError
+            coEvery { this@mockk.invoke() } returns ExportDatabase.Result.DocumentCreateError
         }
         val backupStore = mockk<BackupStore> {
             coEvery { exportDirectoryUri() } returns "uri" andThen null
@@ -151,7 +146,7 @@ class BackupCalendarViewModelTest {
 
             vm.onChooseExportLocation()
 
-            awaitSideEffect() shouldBe ChooseExportLocation
+            awaitSideEffect() shouldBe ExportCalendarViewModel.SideEffect.ChooseExportLocation
         }
     }
 

@@ -5,7 +5,6 @@ Allows managing of events and backup to a user directory (I use this personally 
 ### Not yet implemented
 
 - Notifications
-- Import
 - Repeatable events
 
 ### Screenshots

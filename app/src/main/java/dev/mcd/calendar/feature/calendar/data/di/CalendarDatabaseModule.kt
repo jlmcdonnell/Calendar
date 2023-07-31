@@ -7,11 +7,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.mcd.calendar.feature.backup.domain.ExtractBackupFile
 import dev.mcd.calendar.feature.calendar.data.dao.Events
 import dev.mcd.calendar.feature.calendar.data.database.CalendarDatabase
 import dev.mcd.calendar.feature.calendar.data.mapper.EventEntityMapper
+import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 import java.io.File
 import javax.inject.Singleton
+import kotlin.system.measureTimeMillis
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,11 +37,20 @@ class CalendarDatabaseModule {
     fun calendarDatabase(
         @ApplicationContext context: Context,
         @CalendarDBName dbName: String,
-    ): CalendarDatabase = Room.databaseBuilder(
-        context = context,
-        klass = CalendarDatabase::class.java,
-        name = dbName,
-    ).build()
+        extractBackupFile: ExtractBackupFile,
+    ): CalendarDatabase {
+        runBlocking {
+            val time = measureTimeMillis {
+                extractBackupFile()
+            }
+            Timber.d("Ran DB extract: $time ms")
+        }
+        return Room.databaseBuilder(
+            context = context,
+            klass = CalendarDatabase::class.java,
+            name = dbName,
+        ).build()
+    }
 
     @Provides
     fun events(database: CalendarDatabase): Events {

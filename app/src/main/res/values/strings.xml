@@ -3,10 +3,14 @@
 
     <string name="back">Back</string>
 
-    <!-- Backup Dialog -->
+    <!-- Export Dialog -->
     <string name="export_dialog_title">Export Calendar</string>
     <string name="export_dialog_export">Export</string>
     <string name="export_dialog_choose_location">Set Location</string>
+
+    <!-- Export Dialog -->
+    <string name="import_dialog_title">Import Calendar</string>
+    <string name="import_dialog_import">Import</string>
 
     <!-- Calendar Screen -->
     <string name="calendar_next_month">Next Month</string>

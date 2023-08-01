@@ -1,3 +1,5 @@
+[![Run Checks](https://github.com/jlmcdonnell/Calendar/actions/workflows/runChecks.yml/badge.svg)](https://github.com/jlmcdonnell/Calendar/actions/workflows/runChecks.yml)
+
 ## Calendar app implemented with Jetpack Compose
 
 Allows managing of events and backup to a user directory (I use this personally with a [Syncthing](https://syncthing.net/) folder)

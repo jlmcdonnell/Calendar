@@ -80,7 +80,7 @@ fun CreateEventScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Column(
-                modifier = Modifier.width(200.dp),
+                modifier = Modifier.width(250.dp),
             ) {
                 state.date?.let { date ->
                     DateField(

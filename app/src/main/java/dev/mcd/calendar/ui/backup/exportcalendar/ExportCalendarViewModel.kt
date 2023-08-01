@@ -19,11 +19,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class TestVM @Inject constructor(
-    val backupStore: BackupStore,
-) : ViewModel()
-
-@HiltViewModel
 class ExportCalendarViewModel @Inject constructor(
     private val backupStore: BackupStore,
     private val exportDatabase: ExportDatabase,

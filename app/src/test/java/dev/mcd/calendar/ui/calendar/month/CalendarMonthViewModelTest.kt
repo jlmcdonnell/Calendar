@@ -70,6 +70,26 @@ class CalendarMonthViewModelTest {
     }
 
     @Test
+    fun `When calendar month is reset, Then reset calendar date to current date`() = runTest {
+        val date = LocalDate.now()
+        val viewModel = givenViewModel()
+        viewModel.test(this, givenTestState()) {
+            expectInitialState()
+
+            // When
+            viewModel.onNextMonth()
+            awaitState()
+
+            viewModel.onResetCalendarDate()
+
+            // Then
+            awaitState().run {
+                calendarDate shouldBe date
+            }
+        }
+    }
+
+    @Test
     fun `When a date with no Events is clicked, Then Navigate to Create Event`() = runTest {
         val viewModel = givenViewModel()
         viewModel.test(this) {

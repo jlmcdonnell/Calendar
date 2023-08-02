@@ -3,6 +3,7 @@ package dev.mcd.calendar.ui.calendar.month.view
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.rounded.Restore
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,30 +23,54 @@ import java.util.Locale
 @Composable
 fun CalendarMonthTopBar(
     date: LocalDate?,
+    showReturnToDate: Boolean,
     onExportClicked: () -> Unit,
     onImportClicked: () -> Unit,
+    onReturnToDateClicked: () -> Unit,
 ) {
     TopAppBar(
         title = {
             date?.run {
-                Row {
-                    val monthText = month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-                    Text(
-                        modifier = Modifier.alpha(.65f),
-                        text = "$year / ",
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Text(text = monthText)
-                }
+                DateTitle(date = date)
             } ?: run {
                 Text(text = stringResource(id = R.string.app_name))
             }
         },
         actions = {
+            if (showReturnToDate) {
+                ReturnToDateButton {
+                    onReturnToDateClicked()
+                }
+            }
             ImportButton(onImport = onImportClicked)
             ExportButton(onExport = onExportClicked)
         },
     )
+}
+
+@Composable
+private fun ReturnToDateButton(onClick: () -> Unit) {
+    IconButton(
+        onClick = onClick,
+    ) {
+        Icon(
+            painter = rememberVectorPainter(image = Icons.Rounded.Restore),
+            contentDescription = stringResource(id = R.string.calendar_return_to_date),
+        )
+    }
+}
+
+@Composable
+private fun DateTitle(date: LocalDate) {
+    Row {
+        val monthText = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        Text(
+            modifier = Modifier.alpha(.65f),
+            text = "${date.year} / ",
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Text(text = monthText)
+    }
 }
 
 @Composable

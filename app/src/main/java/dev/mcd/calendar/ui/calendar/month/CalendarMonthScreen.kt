@@ -51,8 +51,12 @@ fun CalendarMonthScreen(
         topBar = {
             CalendarMonthTopBar(
                 date = state.calendarDate,
+                showReturnToDate = state.currentDate != state.calendarDate,
                 onImportClicked = onNavigateImport,
                 onExportClicked = onNavigateExport,
+                onReturnToDateClicked = {
+                    viewModel.onResetCalendarDate()
+                },
             )
         },
     ) {

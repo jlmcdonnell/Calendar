@@ -46,6 +46,12 @@ class CalendarMonthViewModel @Inject constructor(
         }
     }
 
+    fun onResetCalendarDate() {
+        intent {
+            updateMonth(date = state.currentDate)
+        }
+    }
+
     fun onDateClicked(date: LocalDate) {
         intent {
             if ((state.events[date] ?: 0) > 0) {

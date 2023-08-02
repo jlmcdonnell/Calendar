@@ -1,8 +1,7 @@
 package dev.mcd.calendar.ui.calendar.month
 
-import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForMonth
+import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForDates
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -20,17 +19,16 @@ class CalendarMonthViewModelTest {
     @Test
     fun `When initialized, Then emit current date`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, CalendarMonthViewModel.State()) {
-            runOnCreate()
-            expectInitialState()
-            awaitState().date shouldBe defaultTestDate
+        viewModel.test(this, givenTestState(date = defaultTestDate)) {
+            awaitState().currentDate shouldBe defaultTestDate
+            cancelAndIgnoreRemainingItems()
         }
     }
 
     @Test
     fun `When initialized, Then generate month days`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, CalendarMonthViewModel.State()) {
+        viewModel.test(this, givenTestState()) {
             runOnCreate()
             expectInitialState()
             awaitState().monthDays.shouldNotBeNull()
@@ -40,7 +38,7 @@ class CalendarMonthViewModelTest {
     @Test
     fun `When next month is clicked, Then the data should be updated`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, CalendarMonthViewModel.State()) {
+        viewModel.test(this, givenTestState()) {
             runOnCreate()
             expectInitialState()
             val currentState = awaitState()
@@ -50,7 +48,6 @@ class CalendarMonthViewModelTest {
 
             // Then
             awaitState().run {
-                date shouldBe defaultTestDate.plusMonths(1)
                 monthDays shouldNotBe currentState.monthDays
             }
         }
@@ -59,9 +56,7 @@ class CalendarMonthViewModelTest {
     @Test
     fun `When previous month is clicked, Then the data should be updated`() = runTest {
         val viewModel = givenViewModel()
-        viewModel.test(this, CalendarMonthViewModel.State()) {
-            runOnCreate()
-            expectInitialState()
+        viewModel.test(this, givenTestState()) {
             val currentState = awaitState()
 
             // When
@@ -69,27 +64,7 @@ class CalendarMonthViewModelTest {
 
             // Then
             awaitState().run {
-                date shouldBe defaultTestDate.minusMonths(1)
                 monthDays shouldNotBe currentState.monthDays
-            }
-        }
-    }
-
-    @Test
-    fun `When the date is changed within the month, Then only update the date`() = runTest {
-        val viewModel = givenViewModel()
-        viewModel.test(this, CalendarMonthViewModel.State()) {
-            runOnCreate()
-            expectInitialState()
-            val currentState = awaitState()
-
-            // When
-            viewModel.onGoToDate(defaultTestDate.plusDays(1))
-
-            // Then
-            awaitState().run {
-                date shouldBe defaultTestDate.plusDays(1)
-                monthDays shouldBe currentState.monthDays
             }
         }
     }
@@ -99,7 +74,6 @@ class CalendarMonthViewModelTest {
         val viewModel = givenViewModel()
         viewModel.test(this) {
             expectInitialState()
-            runOnCreate()
 
             // When
             viewModel.onDateClicked(defaultTestDate)
@@ -112,16 +86,16 @@ class CalendarMonthViewModelTest {
 
     @Test
     fun `When a date with Events is clicked, Then Navigate to Day`() = runTest {
-        val events = mapOf(defaultTestDate to DateEventCount(defaultTestDate, 1))
+        val events = mapOf(defaultTestDate to 1)
 
         val viewModel = givenViewModel(
-            getEventCountsForMonth = givenEvents(events),
+            getEventCountsForDates = givenEvents(events),
         )
 
-        viewModel.test(this) {
+        viewModel.test(this, initialState = givenTestState(date = defaultTestDate)) {
             expectInitialState()
             runOnCreate()
-            awaitState()
+            awaitState().events shouldBe events
 
             // When
             viewModel.onDateClicked(defaultTestDate)
@@ -134,9 +108,9 @@ class CalendarMonthViewModelTest {
 
     @Test
     fun `When events for date are present, Then emit events`() = runTest {
-        val events = mapOf(defaultTestDate to DateEventCount(defaultTestDate, 1))
+        val events = mapOf(defaultTestDate to 1)
         val viewModel = givenViewModel(
-            getEventCountsForMonth = givenEvents(events),
+            getEventCountsForDates = givenEvents(events),
         )
 
         viewModel.test(this) {
@@ -153,26 +127,30 @@ class CalendarMonthViewModelTest {
     private fun givenViewModel(
         dateProvider: () -> LocalDate = { defaultTestDate },
         getMonthDays: GetMonthDays = GetMonthDays(),
-        getEventCountsForMonth: GetEventCountsForMonth = givenNoEvents(),
+        getEventCountsForDates: GetEventCountsForDates = givenNoEvents(),
     ): CalendarMonthViewModel {
         return CalendarMonthViewModel(
             dateProvider = dateProvider,
             getMonthDays = getMonthDays,
-            getEventCountsForMonth = getEventCountsForMonth,
+            getEventCountsForDates = getEventCountsForDates,
         )
     }
 
-    private fun givenNoEvents(): GetEventCountsForMonth {
+    private fun givenNoEvents(): GetEventCountsForDates {
         return mockk {
             coEvery { this@mockk.invoke(any()) } returns emptyMap()
         }
     }
 
     private fun givenEvents(
-        events: Map<LocalDate, DateEventCount> = emptyMap(),
-    ): GetEventCountsForMonth {
+        events: Map<LocalDate, Int> = emptyMap(),
+    ): GetEventCountsForDates {
         return mockk {
             coEvery { this@mockk.invoke(any()) } returns events
         }
     }
+
+    private fun givenTestState(date: LocalDate = LocalDate.now()) = CalendarMonthViewModel.State(
+        currentDate = date,
+    )
 }

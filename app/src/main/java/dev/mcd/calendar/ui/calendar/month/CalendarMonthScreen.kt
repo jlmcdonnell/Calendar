@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.mcd.calendar.R
-import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect.NavigateCreateEvent
@@ -51,7 +50,7 @@ fun CalendarMonthScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CalendarMonthTopBar(
-                date = state.date,
+                date = state.calendarDate,
                 onImportClicked = onNavigateImport,
                 onExportClicked = onNavigateExport,
             )
@@ -62,6 +61,7 @@ fun CalendarMonthScreen(
         ) {
             if (state.monthDays != null) {
                 Calendar(
+                    date = state.currentDate,
                     monthDays = state.monthDays!!,
                     events = state.events,
                     onPreviousMonth = { viewModel.onPreviousMonth() },
@@ -75,8 +75,9 @@ fun CalendarMonthScreen(
 
 @Composable
 private fun Calendar(
+    date: LocalDate,
     monthDays: MonthDays,
-    events: Map<LocalDate, DateEventCount>,
+    events: Map<LocalDate, Int>,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     onDateClicked: (LocalDate) -> Unit,
@@ -86,14 +87,15 @@ private fun Calendar(
             .fillMaxWidth()
             .padding(4.dp),
         monthDays = monthDays,
-        onCellClicked = { date -> onDateClicked(date.date) },
-        renderCell = { date ->
-            events[date.date]?.let { count ->
+        date = date,
+        onCellClicked = { cellDate -> onDateClicked(cellDate.date) },
+        renderCell = { cellDate ->
+            events[cellDate.date]?.let { count ->
                 EventCountText(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .alpha(if (date.isInMonth) 1f else 0.6f),
-                    count = count.count,
+                        .alpha(if (cellDate.isInMonth) 1f else 0.6f),
+                    count = count,
                 )
             }
         },

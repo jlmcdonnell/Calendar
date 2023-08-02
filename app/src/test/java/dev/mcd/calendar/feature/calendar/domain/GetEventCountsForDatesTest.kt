@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @RunWith(RobolectricTestRunner::class)
-class GetEventCountsForMonthTest {
+class GetEventCountsForDatesTest {
 
     private val testScope = TestScope()
 
@@ -24,19 +24,16 @@ class GetEventCountsForMonthTest {
     val databaseRule = calendarDatabaseRule()
 
     private lateinit var repository: EventsRepository
-    private lateinit var getEventCountsForMonth: GetEventCountsForMonth
-    private lateinit var getMonthDays: GetMonthDays
+    private lateinit var getEventCountsForDates: GetEventCountsForDates
 
     @Before
     fun setUp() {
-        getMonthDays = GetMonthDays()
-
         repository = EventsRepositoryImpl(
             events = databaseRule.database.events(),
             mapper = EventEntityMapper(),
             dispatcher = testScope.coroutineContext[CoroutineDispatcher.Key]!!,
         )
-        getEventCountsForMonth = GetEventCountsForMonth(repository)
+        getEventCountsForDates = GetEventCountsForDates(repository)
     }
 
     @Test
@@ -50,14 +47,11 @@ class GetEventCountsForMonthTest {
             date = date,
             time = LocalTime.now(),
         )
-        val monthData = getMonthDays(date)
-
         // When
-        val result = getEventCountsForMonth(monthData)
+        val result = getEventCountsForDates(listOf(date))
 
         // Then
-        result.getValue(date).count shouldBe 1
-        result.getValue(date).date shouldBe date
+        result.getValue(date) shouldBe 1
     }
 
     @Test
@@ -65,10 +59,8 @@ class GetEventCountsForMonthTest {
         // Given
         val date = LocalDate.now()
 
-        val monthData = getMonthDays(date)
-
         // When
-        val result = getEventCountsForMonth(monthData)
+        val result = getEventCountsForDates(listOf(date))
 
         // Then
         result.values.size shouldBe 0

@@ -2,9 +2,8 @@ package dev.mcd.calendar.ui.calendar.month
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForMonth
+import dev.mcd.calendar.feature.calendar.domain.GetEventCountsForDates
 import dev.mcd.calendar.feature.calendar.domain.GetMonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.DateEventCount
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.SideEffect
 import dev.mcd.calendar.ui.calendar.month.CalendarMonthViewModel.State
@@ -13,53 +12,43 @@ import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.syntax.simple.repeatOnSubscription
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class CalendarMonthViewModel @Inject constructor(
-    private val dateProvider: () -> LocalDate,
+    dateProvider: () -> LocalDate,
     private val getMonthDays: GetMonthDays,
-    private val getEventCountsForMonth: GetEventCountsForMonth,
+    private val getEventCountsForDates: GetEventCountsForDates,
 ) : ViewModel(), ContainerHost<State, SideEffect> {
 
     override val container = container<State, SideEffect>(
-        initialState = State(),
+        initialState = State(currentDate = dateProvider()),
         onCreate = {
             intent {
-                repeatOnSubscription {
-                    val date = dateProvider()
-                    selectDate(date)
-                }
+                updateMonth(state.currentDate)
             }
         },
     )
 
     fun onNextMonth() {
         intent {
-            val date = state.date ?: return@intent
-            selectDate(date.plusMonths(1))
+            val date = state.calendarDate
+            updateMonth(date.plusMonths(1))
         }
     }
 
     fun onPreviousMonth() {
         intent {
-            val date = state.date ?: return@intent
-            selectDate(date.minusMonths(1))
-        }
-    }
-
-    fun onGoToDate(date: LocalDate) {
-        intent {
-            selectDate(date)
+            val date = state.calendarDate
+            updateMonth(date.minusMonths(1))
         }
     }
 
     fun onDateClicked(date: LocalDate) {
         intent {
-            if ((state.events[date]?.count ?: 0) > 0) {
+            if ((state.events[date] ?: 0) > 0) {
                 postSideEffect(SideEffect.NavigateToDay(date))
             } else {
                 postSideEffect(SideEffect.NavigateCreateEvent(date))
@@ -68,23 +57,24 @@ class CalendarMonthViewModel @Inject constructor(
     }
 
     context(SimpleSyntax<State, SideEffect>)
-    private suspend fun selectDate(date: LocalDate) {
+    private suspend fun updateMonth(date: LocalDate) {
         val newMonthDays = getMonthDays(date)
-        val events = getEventCountsForMonth(newMonthDays)
+        val events = getEventCountsForDates(newMonthDays.map { it.date })
 
         reduce {
             state.copy(
-                date = date,
                 monthDays = newMonthDays,
                 events = events,
+                calendarDate = date,
             )
         }
     }
 
     data class State(
-        val date: LocalDate? = null,
+        val currentDate: LocalDate,
+        val calendarDate: LocalDate = currentDate,
         val monthDays: MonthDays? = null,
-        val events: Map<LocalDate, DateEventCount> = emptyMap(),
+        val events: Map<LocalDate, Int> = emptyMap(),
     )
 
     sealed interface SideEffect {

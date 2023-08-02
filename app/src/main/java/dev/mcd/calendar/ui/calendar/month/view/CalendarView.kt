@@ -1,44 +1,31 @@
 package dev.mcd.calendar.ui.calendar.month.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.mcd.calendar.feature.calendar.domain.entity.CalendarDate
 import dev.mcd.calendar.feature.calendar.domain.entity.MonthDays
-import dev.mcd.calendar.feature.calendar.domain.entity.isInMonth
 import dev.mcd.calendar.ui.calendar.month.view.modifier.CalendarLayout
-import dev.mcd.calendar.ui.calendar.month.view.modifier.calendarCellPadding
 import dev.mcd.calendar.ui.calendar.month.view.modifier.calendarLayout
 import dev.mcd.calendar.ui.theme.LocalAppColors
-import java.time.DayOfWeek
-import java.time.format.TextStyle
-import java.util.Locale
+import java.time.LocalDate
 
 @Composable
 fun CalendarView(
     modifier: Modifier = Modifier,
     monthDays: MonthDays,
+    date: LocalDate,
     renderCell: @Composable BoxScope.(CalendarDate) -> Unit = {},
     onCellClicked: (CalendarDate) -> Unit = {},
 ) {
@@ -62,71 +49,19 @@ fun CalendarView(
                 .background(appColors.calendarBackground),
         ) {
             calendarLayout?.run {
-                monthDays.forEachIndexed { i, date ->
+                monthDays.forEachIndexed { i, calendarDate ->
                     CalendarCell(
                         index = i,
-                        date = date,
+                        cellSize = cellSize,
+                        date = calendarDate,
+                        isToday = calendarDate.date == date,
                         onCellClicked = onCellClicked,
                         renderCell = {
-                            renderCell(date)
+                            renderCell(calendarDate)
                         },
                     )
                 }
             }
         }
-    }
-}
-
-context(CalendarLayout)
-@Composable
-fun WeekDays(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = cellSize / 2)
-            .alpha(.6f),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        DayOfWeek.values().forEach { day ->
-            Text(
-                modifier = Modifier.width(10.dp),
-                text = day.getDisplayName(TextStyle.NARROW, Locale.getDefault()),
-                fontSize = 12.sp,
-            )
-        }
-    }
-}
-
-context(CalendarLayout)
-@Composable
-fun CalendarCell(
-    index: Int,
-    date: CalendarDate,
-    renderCell: @Composable BoxScope.() -> Unit = {},
-    onCellClicked: (CalendarDate) -> Unit = {},
-) {
-    val appColors = LocalAppColors.current
-
-    Box(
-        modifier = Modifier
-            .size(cellSize)
-            .calendarCellPadding(index)
-            .clip(RoundedCornerShape(2.dp))
-            .let {
-                if (date.isInMonth) {
-                    it.background(appColors.inMonthBackground)
-                } else {
-                    it.background(appColors.outOfMonthBackground)
-                }
-            }
-            .clickable { onCellClicked(date) },
-    ) {
-        Text(
-            modifier = Modifier.padding(start = 3.dp),
-            text = "${date.date.dayOfMonth}",
-            color = appColors.calendarContentColor,
-            fontSize = 11.sp,
-        )
-        renderCell()
     }
 }
